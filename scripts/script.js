@@ -310,10 +310,14 @@ async function printStruk(e) {
 	await printLine("================================");
 	
   const terimaKasih = toko.terimaKasih.split(",");
-  const terima = terimaKasih[0].trim();
-  const kasih = terimaKasih[1].trim();
+  const terima = terimaKasih[0].trim() || "";
+  const kasih = terimaKasih[1].trim() || "";
+  if (kasih) {
 	await printLine(`${terima}`, 1);
 	await printLine(`${kasih}`, 1);
+  } else {
+    await printLine(`${kasih}`, 1);
+  }
   await printLine("\n\n", 1);
   
   cart.length = 0;
