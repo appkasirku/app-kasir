@@ -1,0 +1,389 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+	font-family: Arial;
+	padding: 20px;
+	background: #394150;
+}
+button {
+	padding: 10px 15px;
+	margin-bottom: 10px;
+}
+#status {
+	margin-top: 10px;
+	font-weight: bold;
+}
+.form-struk {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 999;
+	background: #fff;
+}
+.form-struk.hidden {
+	display: none;
+}
+.form-struk .boxer {
+	background: #fff;
+	padding: 5px 2px;
+	margin: 4px auto;
+	width: calc(100% - 6px);
+	max-width: 480px;
+}
+.boxer .title {
+	margin-bottom: 0;
+}
+.boxer .title h3 {
+	text-align: center;
+	color: #333;
+	margin: 0 10px;
+	font-size: 14px;
+}
+.form-struk form {
+	background: transparent;
+	margin: 0;
+	display: flex;
+	justify-content: space-between;
+}
+.form-struk form label {
+	font-size: 12px;
+	font-family: Monospace;
+	font-weight: bold;
+	color: #333;
+}
+.form-struk form input,
+.form-struk form input#diskonHarga {
+	display: block;
+	padding: 8px 10px;
+	margin: 3px 0 0;
+	border-radius: 4px;
+	border: none;
+	width: 100%;
+	outline: none;
+	font-size: 14px;
+	font-family: Monospace;
+	background: #39415066;
+	color: #fff;
+	box-shadow: inset 1px 1px 2px 1px #555;
+}
+.form-struk form input:focus,
+.form-struk form input#diskonHarga:focus {
+	background: #fff;
+	color: #394150;
+}
+.form-struk form input[readonly] {
+	background: #39415022;
+	box-shadow: inset 0 0 0 1px #39415022;
+}
+.form-struk form input[readonly]:focus {
+	box-shadow: inset 0 0 0 1px #aaa;
+}
+.form-struk form button {
+	background: #aaa;
+	border: none;
+	border-radius: 4px;
+	color: #fff;
+	box-shadow: 0 0 0 1px #aaa;
+}
+.form-struk form button.btnscan,
+.form-struk form button[type="submit"] {
+	background: #33aaee;
+	color: #fff;
+	font-weight: bold;
+	font-family: Monospace;
+	padding: 5px 12px;
+	border: 3px inset transparent;
+	box-shadow: none;
+}
+.form-struk form button[type="submit"]:focus {
+	border-radius: 0;
+	border-color: #ccc;
+}
+.form-struk form button.btnscan {
+	background: #394150;
+}
+.form-struk .flex-action {
+	display: flex;
+	gap: 10px;
+}
+.form-struk .flex-action button {
+	flex: 1;
+}
+.form-struk form .row.flex {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+}
+.form-struk form .row.flex div {
+	flex: 1;
+}
+.form-struk form .flex-center {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}
+.form-struk .row {
+	margin: 0 8px 5px;
+}
+.form-struk .row.mb-20 {
+	margin-bottom: 20px;
+}
+.form-struk .row.flex.mb-0 {
+	margin-bottom: 0;
+}
+
+.form-struk .box-form {
+	padding: 5px 0;
+	margin: 5px 5px 5px 0;
+	border-radius: 6px;
+	width: 100%;
+	min-width: 240px;
+	max-width: 480px;
+	max-height: 260px;
+	position: relative;
+	display: block;
+	box-shadow: inset 0 0 20px #39415099;
+	background: #39415045;
+}
+.form-struk .box-prev {
+	margin: 5px auto 0;
+	background: #fff;
+	width: 100%;
+	max-width: 100px;
+	height: 100%;
+	min-height: 347px;
+	padding: 4px;
+	border-radius: 4px;
+	box-shadow: 0 0 0 1px #39415045;
+}
+.box-prev hr {
+	height: 0;
+	border: none;
+	margin: 2px 0;
+	border-bottom: 1px dotted #999;
+}
+.box-prev .btn-print {
+	text-align: center;
+	margin: 20px 0 0;
+}
+.box-prev .btn-print button {
+	padding: 8px 10px;
+	font-size: 10px;
+	background: #555!important;
+	font-weight: bold!important;
+	box-shadow: 0 0 1px #777!important;
+	font-family: Monospace;
+}
+.preview {
+	font-size: 10px;
+	line-height: 7px;
+	font-family: Monospace;
+	position: relative;
+}
+.preview h4.toko {
+	font-size: 6px;
+	margin-bottom: 10px;
+	color: #444;
+}
+.preview .toko,
+.preview .kontak,
+.preview .alamat,
+.preview .tq {
+	text-align: center;
+}
+.preview p,
+.preview span {
+	font-size: 6px;
+	letter-spacing: -0.25px;
+}
+.preview .flex {
+	display: flex;
+	justify-content: space-between;
+}
+.box-prev.full {
+	position: fixed;
+	z-index: 999;
+	top: 3px;
+	left: 0;
+	right: 0;
+	bottom: 20px;
+	background: #fff;
+	width: 100%;
+	max-width: 100%;
+	overflow-y: auto;
+	box-shadow: none;
+}
+.box-prev.full .preview {
+	font-size: 16px;
+	line-height: normal;
+	width: 100%;
+	max-width: 300px;
+	margin: 20px auto;
+}
+.box-prev.full .preview hr {
+	margin: 5px 0;
+}
+.box-prev.full .preview h4.toko {
+	font-size: 16px;
+	margin-bottom: 20px;
+	color: #333;
+}
+.box-prev.full .preview p,
+.box-prev.full .preview span {
+	font-size: 14px;
+	letter-spacing: -0.25px;
+}
+.btn-per-pro {
+	text-align: center;
+	margin: 20px 0 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+.btn-per-pro.mt10 {
+	margin: 10px 0 0;
+}
+.btn-per-pro button {
+	margin: 0;
+	flex: 1;
+}
+.btn-per-pro button:nth-child(1),
+.btn-per-pro button:nth-child(2) {
+	background: #39415055;
+	color: #394150;
+	font-family: Monospace;
+	padding: 6px;
+}
+.btn-per-pro button#prosesPrint {
+	background: #394150;
+	color: #fff;
+	font-weight: bold;
+	padding: 12px 10px;
+}
+.btn-print {
+	display: flex;
+	justify-content: center;
+}
+.btn-print .tutup {
+	display: none;
+}
+.btn-print .tutup.show {
+	height: 30px;
+	width: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #aaa!important;
+	color: #333!important;
+	font-size: 16px;
+}
+
+.box-pembayaran {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 999;
+	background: rgba(0, 0, 0, 0.5);
+	display: none;
+}
+.box-pembayaran.show {
+	display: block;
+}
+.pembayaran {
+	position: fixed;
+	width: 250px;
+	z-index: 999;
+	background: #eee;
+	left: 50%;
+	top: 10%;
+	transform: translateX(-50%);
+	padding: 30px 20px 0;
+	border-radius: 6px;
+	box-shadow: 0 0 0 1px #bbb,
+	inset 0 0 30px #aaa,
+	4px 8px 10px rgba(0, 0, 0, 0.25);
+}
+.pembayaran .row {
+	text-align: center;
+}
+.pembayaran .total-belanja,
+.pembayaran .sisa-uang {
+	margin-bottom: 10px;
+}
+.pembayaran p.tb,
+.pembayaran p.su {
+	font-weight: bold;
+	font-size: 24px;
+	background: #fff;
+	padding: 0 6px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	overflow-x: scroll;
+}
+.pembayaran input {
+	width: 100%;
+	padding: 8px 10px;
+	text-align: center;
+	outline: none;
+	font-family: Monospace;
+	font-size: 18px;
+	font-weight: bold;
+}
+.pembayaran input::placeholder {
+	font-size: 14px;
+	font-weight: normal;
+}
+.pembayaran input:focus {
+	border-color: #aaa;
+}
+.pembayaran button {
+	display: inline-block;
+	background: #999;
+	border: 3px outset #ccc;
+	border-top-width: 2px;
+	border-left-width: 2px;
+	border-radius: 2px;
+	padding: 8px 12px;
+	font-weight: bold;
+	font-family: Monospace;
+}
+.pembayaran button:hover {
+	background: rgba(0, 0, 0, 0.2);
+}
+.pembayaran button:focus {
+	background: #888;
+	border: 3px inset #bbb;
+	border-top-width: 2px;
+	border-left-width: 2px;
+}
+.pembayaran .sisa-uang {
+	margin-bottom: 20px;
+}
+.pembayaran .close {
+	background: #ddd;
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	width: 22px;
+	height: 25px;
+	padding: 0;
+	margin: 0;
+	font-size: 20px;
+	color: gray;
+	background: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
