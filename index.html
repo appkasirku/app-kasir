@@ -377,7 +377,6 @@ function liveSearchProduk(el) {
 function pilihProduk(key) {
 	let kode = key.split(",")[0];
 	let rule = key.split(",")[1];
-	alert(key)
 	const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
 	const produk = daftarProduk.find(p => p.kodeProduk === kode);
 	if (produk) {
@@ -410,6 +409,7 @@ function pilihProduk(key) {
 			});
 			
 			tampilkanStruk();
+			tampilkanKeranjang();
 			document.querySelector("#formStruk form").reset();
 			elNama.focus();
 			playBell();
@@ -490,155 +490,75 @@ function pilihProduk(key) {
 }
 </style>
 <div class="keranjang">
-	<table>
-		<tbody>
-			<tr>
-				<td>Rojolele 20 kg</td>
-				<td>2 × 295.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>BMW Pandan Wangi 20 kg</td>
-				<td>1 × 425.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>Rojolele 20 kg</td>
-				<td>2 × 295.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>BMW Pandan Wangi 20 kg</td>
-				<td>1 × 425.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>Rojolele 20 kg</td>
-				<td>2 × 295.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>BMW Pandan Wangi 20 kg</td>
-				<td>1 × 425.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>Rojolele 20 kg</td>
-				<td>2 × 295.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>BMW Pandan Wangi 20 kg</td>
-				<td>1 × 425.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>Rojolele 20 kg</td>
-				<td>2 × 295.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>BMW Pandan Wangi 20 kg</td>
-				<td>1 × 425.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>Rojolele 20 kg</td>
-				<td>2 × 295.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-			<tr>
-				<td>BMW Pandan Wangi 20 kg</td>
-				<td>1 × 425.000</td>
-				<td>
-					<button onclick="editKeranjang()" type="button" title="Edit">
-						<i class="fa-solid fa-edit"></i>
-					</button>
-					<button onclick="hapusKeranjang()" type="button" title="Hapus">
-						<i class="fa-solid fa-trash"></i>
-					</button>
-				</td>
-			</tr>
-		</tbody>
+	<table id="tabelKeranjang">
+		<tbody></tbody>
 	</table>
 </div>
+<script>
+// fungsi hitung total
+function hitungTotal(i, baru) {
+	/*
+	namaBarang,
+	hargaBarang,
+	jumlahBarang,
+	diskonHarga,
+	subtotal,
+	subdiskon
+	*/
+	const subdis = cart[i].diskonHarga * baru;
+	const subtot = cart[i].hargaBarang * baru;
+	//const 
+	cart[i].jumlahBarang = baru;
+	cart[i].subtotal = subtot;
+	cart[i].subdiskon = subdis;
+}
+
+// fungsi edit keranjang
+function editKeranjang(i) {
+	const p = cart[i];
+	let baru = prompt(
+		`Ubah jumlah untuk ${p.namaBarang}
+		\nJumlah saat ini: ${p.jumlahBarang}`,
+		p.jumlahBarang
+	);
+	if (baru === null) return;
+	baru = parseInt(baru);
+	if (isNaN(baru) || baru <= 0) return alert("Jumlah tidak valid!");
+	hitungTotal(i, baru);
+	tampilkanStruk();
+	tampilkanKeranjang();
+}
+
+// fungsi hapus keranjang
+function hapusKeranjang(i) {
+	if (!confirm("Hapus produk ini?")) return;
+	cart.splice(i, 1);
+	tampilkanStruk();
+	tampilkanKeranjang();
+}
+// fungsi tampilkan keranjang 
+const tebelKeranjang = document.querySelector("#tabelKeranjang tbody");
+function tampilkanKeranjang() {
+	tabelKeranjang.innerHTML = "";
+	cart.forEach((p, i) => {
+		tabelKeranjang.innerHTML += `
+		<tr>
+			<td>${i + 1}</td>
+			<td>${p.namaBarang}</td>
+			<td>${p.jumlahBarang} x ${formatRupiah(p.hargaBarang)} = ${formatRupiah(p.subtotal)}</td>
+			<td>
+				<button onclick="editKeranjang(${i})" type="button" title="Edit">
+					<i class="fa-solid fa-edit"></i>
+				</button>
+				<button onclick="hapusKeranjang(${i})" type="button" title="Hapus">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</td>
+		</tr>
+		`;
+	});
+}
+</script>
 			
 			<div class="box-pembayaran">
 				<div class="pembayaran">
@@ -1029,7 +949,7 @@ document.getElementById("tutupPengaturan").addEventListener("click", tutupPengat
 					<h3>Tambah Produk</h3>
 					<div class="row">
 						<label>Nama/Merek (max 20)</label>
-						<input oninput="inputFormatNama(this)" id="ifn" type="text" placeholder="contoh: Rojolele Super">
+						<input oninput="inputFormatNama(this)" id="inputFormNama" type="text" placeholder="contoh: Rojolele Super">
 					</div>
 					<div class="row flex">
 						<div>
@@ -1038,7 +958,7 @@ document.getElementById("tutupPengaturan").addEventListener("click", tutupPengat
 						</div>
 						<div>
 							<label>Kode (max 15)</label>
-							<input oninput="inputFormatKode(this)" type="text" placeholder="contoh: BRJ5K">
+							<input oninput="inputFormatKode(this)" id="inputFormKode" type="text" placeholder="contoh: BRJ5K">
 						</div>
 					</div>
 					<div class="row flex">
@@ -1306,10 +1226,10 @@ const modal = document.getElementById("modalScanner");
 const reader = document.getElementById("reader");
 const focusDot = document.getElementById("focusDot");
 
-function openScanner() {
+function openScanner(rule) {
   modal.style.display = "flex";
   sudahScan = false;
-
+  
   if (!scanner) scanner = new Html5Qrcode("reader");
 
   scanner.start(
@@ -1322,7 +1242,14 @@ function openScanner() {
     decoded => {
       if (sudahScan) return;
       sudahScan = true;
-      pilihProduk(`${decoded}, addpro`);
+      if (rule === "transaksi") {
+      	pilihProduk(`${decoded}, addpro`);
+      } else if (rule === "produk") {
+      	const inputFormNama = document.getElementById("inputFormNama");
+      	const inputFormKode = document.getElementById("inputFormKode");
+      	inputFormNama.focus();
+      	inputFormKode.value = decoded;
+      }
       stopScanner();
     },
     () => {
@@ -1354,8 +1281,8 @@ function stopScanner() {
   });
 }
 
-document.getElementById("btnScan").addEventListener("click", openScanner);
-document.getElementById("btnScanIpro").addEventListener("click", openScanner);
+document.getElementById("btnScan").addEventListener("click", () => openScanner("transaksi"));
+document.getElementById("btnScanIpro").addEventListener("click", () => openScanner("produk"));
 
 /* =============== FLASH CONTROL ================= */
 document.getElementById("btnFlash").addEventListener("click", async () => {
@@ -1397,139 +1324,6 @@ inputFile.addEventListener("change", () => {
 /* =============== BUTTON CLOSE ================ */
 document.getElementById("closeScanner").addEventListener("click", stopScanner);
 </script>
-<!--
-<script>
-let scanner = null;
-let sudahScan = false;
-
-const modal = document.getElementById("modalScanner");
-const reader = document.getElementById("reader");
-
-// Buka scanner
-function openScanner() {
-  modal.style.display = "flex";
-  sudahScan = false;
-
-  if (!scanner) scanner = new Html5Qrcode("reader");
-
-  scanner.start(
-    { facingMode: "environment" },
-    { 
-      fps: 12, 
-      qrbox: { width: 280, height: 200 } 
-    },
-    (decoded) => {
-      if (sudahScan) return;
-      sudahScan = true;
-
-      pilihProduk(`${decoded}, addpro`);
-
-      stopScanner();
-    },
-    () => {} // ignore errors
-  );
-}
-
-function stopScanner() {
-  if (!scanner) return;
-  scanner.stop().then(() => {
-    // fallback: pastikan semua track mati
-    try {
-      const stream = reader.srcObject;
-      if (stream) {
-        stream.getTracks().forEach(t => t.stop());
-      }
-    } catch(e) {}
-    modal.style.display = "none";
-  });
-}
-
-document.getElementById("btnScan").addEventListener("click", openScanner);
-document.getElementById("btnScanIpro").addEventListener("click", openScanner);
-
-// Scan File dari galeri
-const inputFile = document.getElementById("inputFile");
-document.getElementById("btnScanFile").addEventListener("click", () => {
-  inputFile.click();
-});
-
-inputFile.addEventListener("change", () => {
-  if (inputFile.files.length === 0) return;
-  const file = inputFile.files[0];
-
-  stopScanner();
-
-  scanner.scanFile(file, true)
-    .then(decoded => {
-      pilihProduk(`${decoded}, addpro`);
-      modal.style.display = "none";
-    })
-    .catch(err => alert("Tidak bisa membaca barcode: " + err));
-});
-
-// Tombol Tutup
-document.getElementById("closeScanner").addEventListener("click", stopScanner);
-</script>
--->
-<!--
-<script>
-let scanner;
-
-const modal = document.getElementById("modalScanner");
-const reader = document.getElementById("reader");
-
-// Buka scanner
-function openScanner() {
-	modal.style.display = "flex";
-	scanner = new Html5Qrcode("reader");
-	scanner.start(
-		{ facingMode: "environment" },  // kamera belakang
-		{ fps: 12, qrbox: { width: 280, height: 200 } },
-		(decoded) => {
-			pilihProduk(`${decoded}, addpro`);
-			// stop scanner setelah berhasil
-			scanner.stop().then(() => {
-				modal.style.display = "none";
-			});
-		},
-		() => {} // ignore scanning errors
-	);
-}
-
-document.getElementById("btnScan").addEventListener("click", openScanner);
-document.getElementById("btnScanIpro").addEventListener("click", openScanner);
-
-// pilih gambar scan dari galeri perangkat
-const inputFile = document.getElementById("inputFile");
-const btnScanFile = document.getElementById("btnScanFile");
-btnScanFile.addEventListener("click", () => {
-	inputFile.click();
-});
-
-// ketika gambar dipilih untuk di scan
-inputFile.addEventListener("change", () => {
-  if (inputFile.files.length === 0) return;
-  const imageFile = inputFile.files[0];
-  // stop kamera dulu sebelum scan file
-  scanner.stop().then(() => {
-  	scanner.scanFile(imageFile, true)
-  	.then(decodedText => {
-  		pilihProduk(`${decodedText}, addpro`);
-  		modal.style.display = "none";
-  	})
-  	.catch(err => {
-  		alert("Tidak bisa membaca barcode! " + err); 
-  	});
-  });
-});
-
-// Tombol "Tutup"
-document.getElementById("closeScanner").addEventListener("click", () => {
-  if (scanner) scanner.stop();
-  modal.style.display = "none";
-});
-</script>
--->
 
 	<script src="./scripts/script.js"></script>
 </body>
