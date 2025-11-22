@@ -1,6 +1,6 @@
 {
-  "name": "Cetak Struk",
-  "short_name": "Cetak Struk",
+  "name": "App Kasir",
+  "short_name": "App Kasir",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#394150",
