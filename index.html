@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<meta name="theme-color" content="#394150">
-	<title>App Kasir - Thermal Print 58mm</title>
+	<title>Cetak Struk - Thermal Print 58mm</title>
 	<link rel="manifest" href="./manifest.json">
 	<link rel="stylesheet" href="./styles/style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -377,6 +377,7 @@ function liveSearchProduk(el) {
 function pilihProduk(key) {
 	let kode = key.split(",")[0];
 	let rule = key.split(",")[1];
+	alert(key)
 	const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
 	const produk = daftarProduk.find(p => p.kodeProduk === kode);
 	if (produk) {
@@ -1382,16 +1383,15 @@ document.getElementById("btnScanFile").addEventListener("click", () => {
 inputFile.addEventListener("change", () => {
   if (inputFile.files.length === 0) return;
   const file = inputFile.files[0];
-
-  stopScanner();
-
-  scanner
-    .scanFile(file, true)
-    .then(decoded => {
-      pilihProduk(`${decoded}, addpro`);
-      modal.style.display = "none";
-    })
-    .catch(err => alert("Tidak bisa membaca barcode: " + err));
+  
+  scanner.stop().then(() => {
+  	scanner.scanFile(file, true)
+	    .then(decoded => {
+	      pilihProduk(`${decoded}, addpro`);
+	      modal.style.display = "none";
+	    })
+	    .catch(err => alert("Tidak bisa membaca barcode: " + err));
+  });
 });
 
 /* =============== BUTTON CLOSE ================ */
@@ -1530,6 +1530,7 @@ document.getElementById("closeScanner").addEventListener("click", () => {
 });
 </script>
 -->
+
 	<script src="./scripts/script.js"></script>
 </body>
 </html>
