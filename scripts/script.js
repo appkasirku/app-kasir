@@ -264,21 +264,21 @@ async function printStruk(e) {
   	alert("Printer belum terhubung!\n\nSilakan SCAN SERVICES atau langsung Hubungkan Printer.");
   	return;
   }
+  
+  const toko = JSON.parse(localStorage.getItem("dataToko")) || [];
     
   await printerCharacteristic.writeValue(new Uint8Array([0x1B, 0x40])); // reset printer
   
-  await printStyled("TB20D", 1, 0x10);
+  await printStyled(`${toko.namaToko}`, 1, 0x30);
   
-  await printStyled("TOKO BERAS 20 DESEMBER", 1, 0x20);
-    
   await printLine("\n", 1);
   
-  await printLine("Kontak: 0812 8524 2366", 1);
-  await printLine("Jl. 20 Desember RT02/RW03", 1);
+  await printLine(`${toko.kontakToko}`, 1);
+  await printLine(`${toko.alamatToko}`, 1);
   
-  await printLine("================================");
+  await printLine("--------------------------------");
     
-  await printLine(lineLR("Kasir", "Admin Toko"));
+  await printLine(lineLR("Kasir", `${toko.namaAdmin}`));
   await printLine(lineLR("Tanggal", tanggalSekarang()));
   
   await printLine("================================");
@@ -291,7 +291,7 @@ async function printStruk(e) {
     }
 	}
 		
-	await printLine("================================");
+	await printLine("--------------------------------");
 		
 	const printSubtotal = cart.reduce((a, b) => a + b.subtotal, 0);
 	const printDiskon = cart.reduce((a, b) => a + b.subdiskon, 0);
@@ -300,8 +300,6 @@ async function printStruk(e) {
   await printLine(lineLR("Subtotal", formatRupiah(printSubtotal)));
   await printLine(lineLR("Total Diskon", formatRupiah(printDiskon)));
   await printLine(lineLR("Total Belanja", formatRupiah(printTotal)));
-  
-	await printLine("================================");
 		
 	const printBayar = document.getElementById("pembayaran").value;
 	const printKembali = document.querySelector(".su").textContent;
@@ -310,13 +308,17 @@ async function printStruk(e) {
   await printLine(lineLR("Kembalian", printKembali));
    
 	await printLine("================================");
- 
-	await printLine("Terima Kasih", 1);
-  await printLine("Sudah Berbelanja", 1);
+	
+  const terimaKasih = toko.terimaKasih.split(",");
+  const terima = terimaKasih[0].trim();
+  const kasih = terimaKasih[1].trim();
+	await printLine(`${terima}`, 1);
+	await printLine(`${kasih}`, 1);
   await printLine("\n\n", 1);
   
   cart.length = 0;
   tampilkanStruk();
+  tampilkanKeranjang();
 	tutupPembayaran();
 	document.getElementById("namaBarang").focus();
 }
@@ -376,6 +378,7 @@ document.querySelector(".produk").addEventListener("click", (e) => {
   if (!confirm(`Hapus ${nama}?`)) return;
   cart.splice(idx, 1);
   tampilkanStruk();
+  tampilkanKeranjang();
   playBell();
 });
 
@@ -417,6 +420,7 @@ function inputTransaksi(e) {
 	});
 	
 	tampilkanStruk();
+	tampilkanKeranjang();
 	document.querySelector("#formStruk form").reset();
 	inputNamaBarang.focus();
 	playBell();
