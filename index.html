@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="theme-color" content="#394150">
+	<title>Cetak Struk - Thermal Print 58mm</title>
+	<link rel="manifest" href="./manifest.json">
+	<link rel="stylesheet" href="./styles/style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* Modal Scanner */
+.modal-scanner {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+}
+.modal-content {
+  background: #394150;
+  padding: 15px;
+  border-radius: 0;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  margin-top: -300px;
+}
+.scanner-box {
+  width: 100%;
+  height: 320px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+}
+.modal-content p {
+	color: #aaa;
+	margin-bottom: 5px;
+}
+.modal-content .scan-file {
+	position: absolute;
+	right: 25px;
+	bottom: 80px;
+	z-index: 999;
+}
+.modal-content .scan-file button {
+	background: transparent;
+	border: 0;
+	box-shadow: 0 0 0 1px #fff;
+	font-size: 26px;
+	color: #fff;
+	border-radius: 4px;
+	padding: 0;
+	margin: 0;
+	width: 32px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.close-btn {
+  margin-top: 10px;
+  width: 100%;
+  background: #ef4444;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Garis merah animasi */
+.scan-line {
+  position: absolute;
+  top: 163px;
+  width: 100%;
+  width: 270px;
+  height: 1px;
+  background: #0f0;
+  animation: scanMove 2.2s infinite;
+  opacity: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+}
+.scan-line.show {
+	display: block;
+}
+
+@keyframes scanMove {
+  0% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 70px); }
+  100% { transform: translate(-50%, 0); }
+}
+/*
+@keyframes scanMove {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(270px); }
+  100% { transform: translateY(0); }
+}
+*/
+
+/* Tombol flash */
+.flash-btn {
+  position: absolute;
+  left: 25px;
+  bottom: 80px;
+  z-index: 999;
+}
+
+.flash-btn button {
+  background: transparent;
+  border: 0;
+  box-shadow: 0 0 0 1px #fff;
+  font-size: 26px;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  width: 32px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Autofocus indikator */
+.autofocus-dot {
+  position: absolute;
+  top: 20px;
+  right: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #00ff00;
+  box-shadow: 0 0 10px #0f0;
+  animation: blinkDot 1.5s infinite;
+}
+
+@keyframes blinkDot {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+</style>
+</head>
+<body>
+
+	<h2>Cetak Struk - Thermal Printer Bluetooth</h2>
+
+	<button onclick="scanBluetooth()">🔍 SCAN SERVICES</button>
+	<p id="uuid"></p>
+
+	<br>
+
+	<button onclick="connectPrinter()">🔗 Hubungkan Printer</button>
+	<br>
+	<button onclick="buatStruk()">🧾 Buat Struk</button>
+
+	<div id="status" style="color:red">Status: belum terhubung</div>
+
+	<div id="formStruk" class="form-struk">
+		<div class="boxer">
+			<div class="title">
+				<h3>
+					<i class="fa-solid fa-receipt"></i>
+					Transaksi Belanja <span class="nama-toko"></span>
+				</h3>
+			</div>
+		
+			<form>
+				<div class="box-form">
+					<div class="row">
+						<label>Nama / Merek</label>
+						<input oninput="liveSearchProduk(this)" id="namaBarang" type="search" placeholder="Kode / nama barang">
+<style>
+.hasil-pencarian {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 1000;
+	background: #39415010;
+	display: none;
+}
+.hasil-pencarian.show {
+	display: block;
+}
+.hasil-pencarian ul {
+	list-style: none;
+	position: relative;
+	overflow-y: scroll;
+	max-height: 300px;
+	max-width: 300px;
+	margin: 90px 0 0 40px;
+}
+.hasil-pencarian ul li {
+	background: #fff;
+	border: 1px solid #39415055;
+	border-top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.hasil-pencarian ul li:first-of-type {
+	border-top: 1px solid #39415055;
+	border-radius: 6px 6px 0 0;
+}
+.hasil-pencarian ul li:last-of-type {
+	border-radius: 0 0 6px 6px;
+}
+.hasil-pencarian ul li:first-of-type span.nama-produk {
+	border-top-left-radius: 5px;
+}
+.hasil-pencarian ul li:last-of-type span.nama-produk {
+	border-bottom-left-radius: 5px;
+}
+.hasil-pencarian ul li span.nama-produk {
+	background: #fff;
+	flex: 1;
+	padding: 10px;
+}
+.hasil-pencarian ul li span.nama-produk:hover {
+	background: #394150;
+	color: #fff;
+}
+.hasil-pencarian ul li span.btn-plus {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	background: #39415055;
+	margin: 0 10px;
+}
+.hasil-pencarian ul li span.btn-plus:hover {
+	background: #394150;
+	color: #fff;
+}
+</style>
+<div class="hasil-pencarian">
+	<ul id="hasilPencarian"></ul>
+</div>
+					</div>
+					<div class="row flex">
+						<div>
+							<label>Harga</label>
+							<input id="hargaBarang" inputmode="numeric" placeholder="0">
+						</div>
+						<div>
+							<label>Jumlah</label>
+							<input id="jumlahBarang" inputmode="numeric" placeholder="0">
+						</div>
+					</div>
+					<div class="row flex">
+						<div>
+							<label>Total Harga</label>
+							<input id="totalHarga" inputmode="numeric" placeholder="0" readonly>
+						</div>
+						<div>
+							<label>Diskon</label>
+							<input id="diskonHarga" inputmode="numeric" placeholder="0" readonly>
+						</div>
+					</div>
+					<hr>
+					<div class="row flex">
+						<div>
+							<label>Total Diskon</label>
+							<input id="totalDiskon" inputmode="numeric" placeholder="0" readonly>
+						</div>
+						<div class="flex-action" style="margin-top:22px">
+							<button id="btnScan" type="button" title="Scan" class="btnscan">
+								<i class="fa-solid fa-barcode"></i>
+							</button>
+							<button id="inputTransaksi" type="submit" title="Tambah">
+								<i class="fa-solid fa-plus"></i>
+							</button>
+						</div>
+					</div>
+					<div class="btn-per-pro">
+						<button id="bukaPengaturan" type="button" title="Pengaturan Toko">
+							<i class="fa-solid fa-gear"></i> Toko
+						</button>
+						<button id="perbesar" class="perbesar" type="button" title="Lihat Struk">
+							<i class="fa-solid fa-eye"></i> Lihat
+						</button>
+					</div>
+					<div class="btn-per-pro mt10">
+						<button id="prosesPrint" type="button" title="Bayar">
+							Bayar <i class="fa-solid fa-hand-holding-dollar"></i>
+						</button>
+					</div>
+				</div>
+				
+				
+				<div id="previewStruk" class="box-prev">
+					<div class="preview">
+						<h4 class="toko"></h4>
+						<p class="kontak"></p>
+						<p class="alamat"></p>
+						<hr>
+						<div class="kasir flex">
+							<span>Kasir</span>
+							<span class="nama">Admin</span>
+						</div>
+						<div class="waktu flex">
+							<span>Tanggal</span>
+							<span class="tanggal"></span>
+						</div>
+						<hr>
+						<div class="produk">
+							<div style="padding:4px;text-align:center;color:#aaa;font-weight:bold">Struk Belanja</div>
+						</div>
+						<hr>
+						<div class="flex">
+							<span>Subtotal</span>
+							<span class="el-subtotal">0</span>
+						</div>
+						<div class="flex">
+							<span>Total Diskon</span>
+							<span class="el-diskon">0</span>
+						</div>
+						<div class="flex">
+							<span>Total Belanja</span>
+							<span class="el-total">0</span>
+						</div>
+						<hr>
+						<div class="flex">
+							<span>Dibayar</span>
+							<span class="el-bayar">0</span>
+						</div>
+						<div class="flex">
+							<span>Kembalian</span>
+							<span class="el-kembali">0</span>
+						</div>
+						<hr>
+						<div class="tq">
+							<p class="tk"></p>
+						</div>
+					</div>
+					
+					<div class="btn-print" style="margin:20px 0 10px">
+						<button id="tutup" class="tutup" type="button" title="Tutup">
+							<i class="fa-solid fa-times"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+<script>
+// fungsi pencarian live produk
+function liveSearchProduk(el) {
+	const hasilPencarian = document.querySelector(".hasil-pencarian");
+	const listProduk = document.getElementById("hasilPencarian");
+	const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
+	//hasilPencarian.innerHTML = "";
+	const hasil = daftarProduk.filter(p => p.kodeProduk.toLowerCase().includes(el.value.toLowerCase()) || p.namaProduk.toLowerCase().includes(el.value.toLowerCase()));
+	hasilPencarian.classList.add("show");
+	listProduk.innerHTML = hasil.map(p => 
+	`
+	<li><span onclick="pilihProduk('${p.kodeProduk}')" class="nama-produk">${p.namaProduk} ${p.beratProduk}</span> <span onclick="pilihProduk('${p.kodeProduk}, addpro')" class="btn-plus">&plus;</span></li>
+	`).join("");
+	if (el.value.trim() === "") {
+		document.querySelector("#formStruk form").reset();
+	}
+	if (el.value.trim() === "" || hasil.length === 0) {
+		hasilPencarian.classList.remove("show");
+		listProduk.innerHTML = "";
+	}
+}
+
+// fungsi pilih produk hasil pencarian
+function pilihProduk(key) {
+	let kode = key.split(",")[0];
+	let rule = key.split(",")[1];
+	const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
+	const produk = daftarProduk.find(p => p.kodeProduk === kode);
+	if (produk) {
+		const elNama = document.getElementById("namaBarang");
+		const elHarga = document.getElementById("hargaBarang");
+		const elJumlah = document.getElementById("jumlahBarang");
+		document.querySelector(".hasil-pencarian").classList.remove("show");
+		elNama.value = `${produk.namaProduk} ${produk.beratProduk}`;
+		elHarga.value = produk.hargaProduk;
+		if (rule !== undefined || rule === "addpro") {
+			//elJumlah.focus();
+		//} else {
+			elJumlah.value = 1;
+			//elNama.focus();
+			const namaBarang = document.getElementById("namaBarang").value;
+			const hargaBarang = Number(document.getElementById("hargaBarang").value.replace(/\./g, ""));
+			const jumlahBarang = Number(document.getElementById("jumlahBarang").value.replace(",", "."));
+			const diskonHarga = Number(document.getElementById("diskonHarga").value.replace(/\./, ""));
+	
+			const subtotal = hargaBarang * jumlahBarang;
+			const subdiskon = diskonHarga * jumlahBarang;
+			
+			cart.push({
+				namaBarang,
+				hargaBarang,
+				jumlahBarang,
+				diskonHarga,
+				subtotal,
+				subdiskon
+			});
+			
+			tampilkanStruk();
+			document.querySelector("#formStruk form").reset();
+			elNama.focus();
+			playBell();
+			//***
+		} else {
+			elJumlah.focus();
+		}
+	} else {
+		//alert("Produk belum tersedia!");
+		const elNama = document.getElementById("namaBarang");
+		elNama.focus();
+		elNama.value = kode;
+	}
+}
+</script>
+
+
+<style>
+.keranjang {
+	width: 100%;
+	max-width: 480px;
+	max-height: 39vh;
+	overflow-y: scroll;
+	margin: 20px auto 0;
+	border-radius: 4px;
+	border: 1px solid orangered;
+}
+.keranjang table {
+	border-collapse: collapse;
+	width: 100%;
+}
+.keranjang table tr {
+	border-bottom: 1px solid #39415055;
+}/*
+.keranjang table tr:first-of-type {
+	border-top: 1px solid orangered;
+}*/
+.keranjang table tr:last-of-type {/*
+	border-bottom: 1px solid orangered;*/
+	border-bottom: 0;
+}
+.keranjang table td {
+	padding: 10px;/*
+	background: #39415011;*/
+}
+.keranjang tr td {
+	white-space: nowrap;
+	font-size: 14px;
+}
+.keranjang tr td:last-of-type {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	padding-right: 5px;
+	position: sticky;
+	right: 0;
+	background: #fff;
+}
+.keranjang button {
+	margin: 0;
+	padding: 0;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 10px;
+	border: 0;
+	box-shadow: none;
+	outline: none;
+	background: orange;
+	border-radius: 2px;
+}
+.keranjang button:last-of-type {
+	color: #eee;
+	background: orangered;
+}
+</style>
+<div class="keranjang">
+	<table>
+		<tbody>
+			<tr>
+				<td>Rojolele 20 kg</td>
+				<td>2 × 295.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>BMW Pandan Wangi 20 kg</td>
+				<td>1 × 425.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>Rojolele 20 kg</td>
+				<td>2 × 295.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>BMW Pandan Wangi 20 kg</td>
+				<td>1 × 425.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>Rojolele 20 kg</td>
+				<td>2 × 295.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>BMW Pandan Wangi 20 kg</td>
+				<td>1 × 425.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>Rojolele 20 kg</td>
+				<td>2 × 295.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>BMW Pandan Wangi 20 kg</td>
+				<td>1 × 425.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>Rojolele 20 kg</td>
+				<td>2 × 295.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>BMW Pandan Wangi 20 kg</td>
+				<td>1 × 425.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>Rojolele 20 kg</td>
+				<td>2 × 295.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td>BMW Pandan Wangi 20 kg</td>
+				<td>1 × 425.000</td>
+				<td>
+					<button onclick="editKeranjang()" type="button" title="Edit">
+						<i class="fa-solid fa-edit"></i>
+					</button>
+					<button onclick="hapusKeranjang()" type="button" title="Hapus">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+			
+			<div class="box-pembayaran">
+				<div class="pembayaran">
+					<span id="tutupPembayaran" class="close">
+						<i class="fa-solid fa-times"></i>
+					</span>
+					<div class="row">
+						<input id="pembayaran" inputmode="numeric" placeholder="Masukkan pembayaran">
+					</div>
+					<div class="row">
+						<div class="total-belanja">
+							Total Belanja
+							<p class="tb">0</p>
+						</div>
+						<div class="sisa-uang">
+							Kembalian
+							<p class="su">0</p>
+						</div>
+						<button id="printStruk" title="Print Struk">
+							<i class="fa-solid fa-print"></i> Print Struk
+							</button>
+					</div>
+				</div>
+			</div>
+			
+<style>
+.setting-box {
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #394150;
+	display: none;
+}
+.setting-box.show {
+	display: block;
+}
+.setting-box form {
+	background: #fff;
+	width: 90%;
+	max-width: 480px;
+	padding: 10px;
+	margin: 20px auto;
+	display: block;
+	border-radius: 6px;
+}
+.setting-box form h3 {
+	text-align: center;
+	border-bottom: 1px solid #39415055;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+.setting-box form input {
+	color: #394150;
+	padding: 10px;
+}
+.setting-box form input::placeholder {
+	color: #39415080;
+	font-size: 12px;
+}
+.setting-box .row {
+	margin-bottom: 10px;
+}
+.setting-box .row.tc {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 20px;
+}
+.setting-box .row.tc button[type="reset"] {
+	background: #39415099;
+}
+.setting-box .row.tc button[type="reset"],
+.setting-box .row.tc button[type="submit"] {
+	flex: 1;
+	padding: 10px!important;
+	font-weight: normal;
+	font-family: normal;
+	border: 0;
+	box-shadow: none;
+}
+</style>
+			<div class="setting-box">
+				<form id="dataToko">
+					<h3>Data Toko</h3>
+					<div class="row">
+						<label>Nama Toko</label>
+						<input type="text" placeholder="contoh: Toko Beras Adi Jaya">
+					</div>
+					<div class="row">
+						<label>Kontak Toko</label>
+						<input type="text" placeholder="contoh: 0812 8524 2366">
+					</div>
+					<div class="row">
+						<label>Alamat Toko</label>
+						<input type="text" placeholder="contoh: Jl. 20 Desember RT2/RW4">
+					</div>
+					<div class="row">
+						<label>Nama Admin</label>
+						<input type="text" placeholder="contoh: Arnadi">
+					</div>
+					<div class="row">
+						<label>Terima Kasih</label>
+						<input type="text" placeholder="Terima Kasih, Sudah Berbelanja">
+					</div>
+					<div class="row tc">
+						<button id="tutupPengaturan" type="reset" title="Tutup">
+							<i class="fa-solid fa-times"></i> Tutup
+						</button>
+						<button id="simpanDataToko" type="submit" title="Simpan">
+							<i class="fa-solid fa-save"></i> Simpan
+						</button>
+					</div>
+				</form>
+			</div>
+			
+			
+			
+<!-- Modal -->
+<div id="modalScanner" class="modal-scanner">
+  <div class="modal-content">
+  	<p>Arahkan kamera ke Barcode / Qr Code</p>
+    <div id="reader" class="scanner-box"></div>
+    
+<div class="scan-line"></div>
+<div id="focusDot" class="autofocus-dot"></div>
+
+<div id="flashCtrl" class="flash-btn">
+  <button id="btnFlash" type="button">
+    <i class="fa-solid fa-bolt"></i>
+  </button>
+</div>
+    
+    <div id="scanFile" class="scan-file">
+    	<input id="inputFile" type="file" accept="image/*" style="display:none">
+    	<button id="btnScanFile" type="button" title="Scan File">
+    		<i class="fa-solid fa-image"></i>
+    	</button>
+    </div>
+    <button id="closeScanner" class="close-btn">Tutup</button>
+  </div>
+</div>
+			
+			
+			
+			
+<script>
+// fungsi tampilkan data toko ke preview struk toko,kontak,alamat,nama,tk
+function tampilkanDataTokoPreviewStruk() {
+	const namaTokoJudul = document.querySelector(".nama-toko");
+	const namaToko = document.querySelector(".toko");
+	const kontakToko = document.querySelector(".kontak");
+	const alamatToko = document.querySelector(".alamat");
+	const namaAdmin = document.querySelector(".nama");
+	const terimaKasih = document.querySelector(".tk");
+	const data = JSON.parse(localStorage.getItem("dataToko"));
+	namaTokoJudul.textContent = data.namaToko !== "" ? "- " + data.namaToko : ""; 
+	namaToko.textContent = data.namaToko;
+	kontakToko.textContent = data.kontakToko;
+	alamatToko.textContent = data.alamatToko;
+	namaAdmin.textContent = data.namaAdmin;
+	terimaKasih.textContent = data.terimaKasih;
+}
+
+// fungsi simpan data toko
+function simpanDataToko(e) {
+	e.preventDefault();
+	const input = document.querySelectorAll("#dataToko input");
+		const dataToko = {
+		namaToko: input[0].value.trim(),
+		kontakToko: input[1].value.trim(),
+		alamatToko: input[2].value.trim(),
+		namaAdmin: input[3].value.trim(),
+		terimaKasih: input[4].value.trim()
+	}
+	localStorage.setItem("dataToko", JSON.stringify(dataToko));
+	tampilkanDataTokoPreviewStruk();
+	tutupPengaturanToko();
+	alert("Data toko berhasil disimpan!");
+}
+
+// fungsi muat data toko
+function muatDataToko() {
+	const data = JSON.parse(localStorage.getItem("dataToko"));
+	if (!data) return;
+	const input = document.querySelectorAll("#dataToko input");
+	input[0].value = data.namaToko || "";
+	input[1].value = data.kontakToko || "";
+	input[2].value = data.alamatToko || "";
+	input[3].value = data.namaAdmin || "";
+	input[4].value = data.terimaKasih || "";
+}
+
+document.getElementById("simpanDataToko").addEventListener("click", simpanDataToko);
+
+window.addEventListener("DOMContentLoaded", () => {
+	tampilkanDataTokoPreviewStruk();
+});
+
+// fungsi buka pengaturan data toko
+function bukaPengaturanToko() {
+	document.querySelector(".setting-box").classList.add("show");
+	muatDataToko();
+}
+
+// fungsi tutup pengaturan data toko
+function tutupPengaturanToko() {
+	document.querySelector(".setting-box").classList.remove("show");
+}
+
+document.getElementById("bukaPengaturan").addEventListener("click", bukaPengaturanToko);
+document.getElementById("tutupPengaturan").addEventListener("click", tutupPengaturanToko);
+</script>
+
+<style>
+.tambah-produk {
+	width: 100%;
+	max-width: 480px;
+	height: 0;
+	position: fixed;
+	left: 50%;
+	bottom: 20%;
+	transform: translateX(-50%);
+	z-index: 990;
+	display: flex;
+	justify-content: end;
+}
+.tambah-produk button {
+	margin: 0 10px 0 0;
+	border-radius: 50%;
+	border: 0;
+	box-shadow: 0 0 1px #394150, inset 0 0 30px #39415099;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+	font-weight: bold;
+	background: #33aaee;
+	color: #eee;
+}
+.tambah-produk button:focus {
+	box-shadow: none;
+	background: #394150;
+	font-weight: normal;
+	font-size: 14px;
+	color: #ddd;
+}
+
+.input-produk {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 999;
+	background: #394150;
+	display: none;
+}
+.input-produk.show {
+	display: block;
+}
+.input-produk form {
+	background: #fff;
+	width: 90%;
+	max-width: 480px;
+	padding: 10px 10px 5px;
+	margin: 20px auto 10px;
+	display: block;
+	border-radius: 6px;
+}
+.input-produk form h3 {
+	text-align: center;
+	border-bottom: 1px solid #39415055;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+.input-produk form input {
+	color: #394150;
+	padding: 10px;
+}
+.input-produk form input::placeholder {
+	color: #39415080;
+	font-size: 12px;
+}
+.input-produk .row {
+	margin-bottom: 10px;
+}
+.input-produk .row:last-of-type {
+	margin-bottom: 0;
+}
+.input-produk .row.tc {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 20px;
+}
+.input-produk .row.tc button[type="reset"] {
+	background: #39415099;
+}
+.input-produk .row.tc button[type="reset"],
+.input-produk .row.tc button[type="submit"] {
+	flex: 1;
+	padding: 10px!important;
+	font-weight: normal;
+	font-family: normal;
+	border: 0;
+	box-shadow: none;
+}
+.input-produk ol {
+	background: #fff;
+	color: #394150;
+	width: 90%;
+	max-width: 480px;
+	margin: auto;
+	border-radius: 4px;
+	padding: 5px 5px 5px 10px;
+	max-height: 49vh;
+	overflow-y: scroll;
+}
+.input-produk ol li {
+	margin-left: 20px;
+	padding: 6px;
+	border-bottom: 1px solid #39415055;
+	font-size: 13px;
+	font-style: italic;
+}
+.input-produk ol li div.flex {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.input-produk ol li div.btn-action {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.input-produk ol li div.btn-action button {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	font-size: 10px;
+	border-radius: 2px;
+	color: #394150;
+}
+.input-produk ol li div button.btn-edit {
+	background: orange;
+}
+.input-produk ol li div button.btn-hapus {
+	background: orangered;
+	color: #eee;
+	font-size: 9px;
+}
+.input-produk ol li:last-of-type {
+	border: 0;
+	padding-bottom: 3px;
+}
+.input-produk ol li .kdp {
+	font-weight: bold;
+}
+.input-produk ol li .ktp {
+	color: #000;
+}
+.input-produk ol li .ctr {
+	outline-style: none;
+	text-align: center;
+	padding: 20px 10px;
+}
+</style>
+			<div class="tambah-produk">
+				<button id="bukaFormProduk" type="button" title="Tambah Produk">
+					<i class="fa-solid fa-plus"></i>
+				</button>
+			</div>
+			
+			<div class="input-produk">
+				<form id="formProduk">
+					<h3>Tambah Produk</h3>
+					<div class="row">
+						<label>Nama/Merek (max 20)</label>
+						<input oninput="inputFormatNama(this)" id="ifn" type="text" placeholder="contoh: Rojolele Super">
+					</div>
+					<div class="row flex">
+						<div>
+							<label>Ukuran (max 10)</label>
+							<input oninput="inputFormatBerat(this)" type="text" placeholder="contoh: 5 Kg">
+						</div>
+						<div>
+							<label>Kode (max 15)</label>
+							<input oninput="inputFormatKode(this)" type="text" placeholder="contoh: BRJ5K">
+						</div>
+					</div>
+					<div class="row flex">
+						<div>
+							<label>Harga Jual (max 10)</label>
+							<input oninput="inputFormatHarga(this)" inputmode="numeric" placeholder="contoh: 75.000">
+						</div>
+						<button id="btnScanIpro" class="btnscan" type="button" title="Scan" style="margin-top:24px">
+							<i class="fa-solid fa-barcode"></i>
+						</button>
+					</div>
+					<div class="row tc">
+						<button id="tutupFormProduk" type="reset" title="Tutup">
+							<i class="fa-solid fa-times"></i> Tutup
+							</button>
+						<button id="simpanFormProduk" type="submit" title="Simpan">
+							<i class="fa-solid fa-save"></i> Simpan
+							</button>
+					</div>
+				</form>
+				<ol id="tampilkanDaftarProduk"></ol>
+			</div>
+<script>
+// fungsi edit produk
+function editProduk(kode) {
+	const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
+
+  // Cari produk berdasarkan kode
+  const produk = daftarProduk.find(p => p.kodeProduk === kode);
+
+  if (!produk) {
+    return alert(`Produk dengan kode ${kode} tidak ditemukan!`);
+  }
+
+  // Masukkan data ke form input
+  /*
+  document.querySelector("#namaProduk").value = produk.namaProduk;
+  document.querySelector("#beratProduk").value = produk.beratProduk;
+  document.querySelector("#kodeProduk").value = produk.kodeProduk;
+  document.querySelector("#hargaProduk").value = produk.hargaProduk;
+  */
+  const input = document.querySelectorAll("#formProduk input");
+  input[0].focus();
+  input[0].value = produk.namaProduk;
+  input[1].value = produk.beratProduk;
+  input[2].value = produk.kodeProduk;
+  input[3].value = produk.hargaProduk;
+
+  // Simpan kode yang sedang diedit (untuk update nanti)
+  localStorage.setItem("produkSedangDiedit", kode);
+}
+
+// fungsi hapus produk
+function hapusProduk(kode) {
+	if (!confirm(`Hapus produk ${kode}?`)) return;
+	const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
+	const index = daftarProduk.findIndex(p => p.kodeProduk === kode);
+	if (index === -1) {
+		alert(`Produk ${kode} tidak dapat dihapus!`);
+		return;
+	}
+	daftarProduk.splice(index, 1);
+	localStorage.setItem("dataProduk", JSON.stringify(daftarProduk));
+	tampilkanDaftarProduk();
+	alert(`Produk ${kode} berhasil dihapus!`);
+}
+
+// fungsi tampilkan daftar produk
+function tampilkanDaftarProduk() {
+	let daftarProduk = JSON.parse(localStorage.getItem("dataProduk"));
+	const tampilkanDaftarProduk = document.getElementById("tampilkanDaftarProduk");
+	tampilkanDaftarProduk.innerHTML = "";
+	if (daftarProduk !== null && daftarProduk.length > 0) {
+		daftarProduk.slice().reverse().forEach((p) => {
+			tampilkanDaftarProduk.innerHTML += `
+			<li>
+				<div class="flex">
+					<div>
+						<span class="kdp">${p.kodeProduk}</span>
+						<span class="ktp">${p.namaProduk} ${p.beratProduk}, Rp ${p.hargaProduk}</span>
+					</div>
+					<div class="btn-action">
+						<button onclick="editProduk('${p.kodeProduk}')" type="button" title="Edit" class="btn-edit">
+							<i class="fa-solid fa-edit"></i>
+						</button>
+						<button onclick="hapusProduk('${p.kodeProduk}')" type="button" title="Hapus" class="btn-hapus">
+							<i class="fa-solid fa-trash"></i>
+						</button>
+					</div>
+				</div>
+			</li>
+			`;
+		});
+	} else {
+		tampilkanDaftarProduk.innerHTML = `
+		<li class="ctr">Belum ada produk yang tersedia!</li>
+		`;
+	}
+}
+//localStorage.removeItem("dataProduk")
+
+// fungsi validasi form produk
+function validasiFormProduk(el) {
+  for (const input of el) {
+  	if (input.value.trim() === "") {
+  		input.focus();
+  		return false;
+  	}
+  }
+  return true;
+}
+
+// fungsi auto spasi diantara angka pada nama produk
+function autoSpasiAngka(el) {
+  let v = el.value;
+  // spasi sebelum angka
+  v = v.replace(/([A-Za-z])(\d)/g, "$1 $2");
+  // spasi setelah angka
+  v = v.replace(/(\d)([A-Za-z])/g, "$1 $2");
+  // rapikan spasi berlebih
+  v = v.replace(/\s+/g, " ");
+  // spasi di akhir jika masih mengetik
+  el.value = v.trimStart();
+}
+
+// fungsi format nama produk, max 20
+function inputFormatNama(el) {
+	el.value = capitalizeWords(el.value);
+	if (el.value.length > 20) el.value = el.value.slice(0, 20);
+	autoSpasiAngka(el);
+}
+
+// fungsi format berat produk, max 10
+function inputFormatBerat(el) {
+	if (el.value.length > 10) el.value = el.value.slice(0, 10);
+	el.value = capitalizeWords(el.value);
+	autoSpasiAngka(el);
+}
+
+// fungsi format kode produk, max 15
+function inputFormatKode(el) {
+	if (el.value.length > 15) el.value = el.value.slice(0, 15);
+	el.value = el.value.trim().toUpperCase();
+}
+
+// fungsi format harga produk, max 10
+function inputFormatHarga(el) {
+	if (el.value.length > 10) el.value = el.value.slice(0, 10);
+	el.value = formatRupiah(el.value.trim().replace(/\D/g, ""));
+} 
+
+// fungsi simpan form produk
+function simpanFormProduk(e) {
+    e.preventDefault();
+
+    const input = document.querySelectorAll("#formProduk input");
+    const nama = input[0].value.trim();
+    const berat = input[1].value.trim();
+    const kode = input[2].value.trim();
+    const harga = input[3].value.trim();
+
+    const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
+
+    const kodeEdit = localStorage.getItem("produkSedangDiedit");
+
+    if (kodeEdit) {
+        // MODE EDIT
+        const index = daftarProduk.findIndex(p => p.kodeProduk === kodeEdit);
+        if (index !== -1) {
+            daftarProduk[index] = {
+                namaProduk: nama,
+                beratProduk: berat,
+                kodeProduk: kode,
+                hargaProduk: harga,
+            };
+        }
+        localStorage.removeItem("produkSedangDiedit");
+    } else {
+        // MODE TAMBAH
+        daftarProduk.push({
+            namaProduk: nama,
+            beratProduk: berat,
+            kodeProduk: kode,
+            hargaProduk: harga,
+        });
+    }
+
+    localStorage.setItem("dataProduk", JSON.stringify(daftarProduk));
+    tampilkanDaftarProduk();
+    playBell();
+		tampilkanDaftarProduk();
+		document.getElementById("formProduk").reset();
+		input[3].blur();
+}
+/*
+function simpanFormProduk(e) {
+	e.preventDefault();
+	const input = document.querySelectorAll("#formProduk input");
+	if (!validasiFormProduk(input)) return;
+	const nama = input[0].value.trim();
+	const berat = input[1].value.trim();
+	const kode = input[2].value.trim();
+	const harga = input[3].value.trim();
+	const dataProdukBaru = {
+		namaProduk: nama,
+		beratProduk: berat,
+		kodeProduk: kode,
+		hargaProduk: harga
+	}
+	let daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
+	const sudahAda = daftarProduk.some(p => p.kodeProduk === kode);
+	if (sudahAda) {
+		input[2].focus();
+		return;
+	}
+	daftarProduk.push(dataProdukBaru);
+	localStorage.setItem("dataProduk", JSON.stringify(daftarProduk));
+	playBell();
+	tampilkanDaftarProduk();
+	document.getElementById("formProduk").reset();
+	input[3].blur();
+}
+*/
+
+// fungsi buka form produk
+function bukaFormProduk() {
+	document.querySelector(".input-produk").classList.add("show");
+	tampilkanDaftarProduk();
+}
+
+// fungsi tutup form produk
+function tutupFormProduk() {
+	document.querySelector(".input-produk").classList.remove("show");
+	document.getElementById("formProduk").reset();
+}
+
+document.getElementById("simpanFormProduk").addEventListener("click", simpanFormProduk);
+
+document.getElementById("bukaFormProduk").addEventListener("click", bukaFormProduk);
+document.getElementById("tutupFormProduk").addEventListener("click", tutupFormProduk);
+</script>
+		
+		</div>
+	</div>
+
+	<audio id="soundBeep" src="./sounds/beep.mp3" preload="auto"></audio>
+
+	<script>
+		// Daftar Service Worker
+		if ("serviceWorker" in navigator) {
+			window.addEventListener("load", () => {
+				navigator.serviceWorker.register("./service-worker.js").then(() => console.log("SW registered")).catch(err => console.error("SW error:", err));
+		  });
+		}
+	</script>
+	<script src="https://unpkg.com/html5-qrcode"></script>
+<!-- fitur scanner -->
+<script>
+let scanner = null;
+let sudahScan = false;
+let flashOn = false;
+let cameraTrack = null;
+
+const modal = document.getElementById("modalScanner");
+const reader = document.getElementById("reader");
+const focusDot = document.getElementById("focusDot");
+
+function openScanner() {
+  modal.style.display = "flex";
+  sudahScan = false;
+
+  if (!scanner) scanner = new Html5Qrcode("reader");
+
+  scanner.start(
+    { facingMode: "environment" },
+    {
+      fps: 12,
+      qrbox: { width: 280, height: 200 },
+      disableFlip: false
+    },
+    decoded => {
+      if (sudahScan) return;
+      sudahScan = true;
+      pilihProduk(`${decoded}, addpro`);
+      stopScanner();
+    },
+    () => {
+      // Auto retry: fokus berubah → dot berkedip
+    	document.querySelector(".scan-line").classList.add("show");
+      focusDot.style.background = "#00ff00";
+      setTimeout(() => (focusDot.style.background = "#66ff66"), 200);
+    }
+  ).then(() => {
+    // Ambil kamera track untuk flash
+    const videoElem = reader.querySelector("video");
+    if (videoElem && videoElem.srcObject) {
+      cameraTrack = videoElem.srcObject.getVideoTracks()[0];
+    }
+  });
+}
+
+function stopScanner() {
+  if (!scanner) return;
+
+  scanner.stop().then(() => {
+    try {
+      const stream = reader.srcObject;
+      if (stream) stream.getTracks().forEach(t => t.stop());
+    } catch {}
+
+    modal.style.display = "none";
+    document.querySelector(".scan-line").classList.remove("show");
+  });
+}
+
+document.getElementById("btnScan").addEventListener("click", openScanner);
+document.getElementById("btnScanIpro").addEventListener("click", openScanner);
+
+/* =============== FLASH CONTROL ================= */
+document.getElementById("btnFlash").addEventListener("click", async () => {
+  if (!cameraTrack) return alert("Flash tidak tersedia!");
+
+  try {
+    flashOn = !flashOn;
+    await cameraTrack.applyConstraints({
+      advanced: [{ torch: flashOn }]
+    });
+
+    document.getElementById("btnFlash").style.boxShadow =
+      flashOn ? "0 0 0 2px yellow" : "0 0 0 1px #fff";
+  } catch (e) {
+    alert("Flash tidak didukung di perangkat ini.");
+  }
+});
+
+/* =============== SCAN DARI FILE =============== */
+const inputFile = document.getElementById("inputFile");
+document.getElementById("btnScanFile").addEventListener("click", () => {
+  inputFile.click();
+});
+
+inputFile.addEventListener("change", () => {
+  if (inputFile.files.length === 0) return;
+  const file = inputFile.files[0];
+
+  stopScanner();
+
+  scanner
+    .scanFile(file, true)
+    .then(decoded => {
+      pilihProduk(`${decoded}, addpro`);
+      modal.style.display = "none";
+    })
+    .catch(err => alert("Tidak bisa membaca barcode: " + err));
+});
+
+/* =============== BUTTON CLOSE ================ */
+document.getElementById("closeScanner").addEventListener("click", stopScanner);
+</script>
+<!--
+<script>
+let scanner = null;
+let sudahScan = false;
+
+const modal = document.getElementById("modalScanner");
+const reader = document.getElementById("reader");
+
+// Buka scanner
+function openScanner() {
+  modal.style.display = "flex";
+  sudahScan = false;
+
+  if (!scanner) scanner = new Html5Qrcode("reader");
+
+  scanner.start(
+    { facingMode: "environment" },
+    { 
+      fps: 12, 
+      qrbox: { width: 280, height: 200 } 
+    },
+    (decoded) => {
+      if (sudahScan) return;
+      sudahScan = true;
+
+      pilihProduk(`${decoded}, addpro`);
+
+      stopScanner();
+    },
+    () => {} // ignore errors
+  );
+}
+
+function stopScanner() {
+  if (!scanner) return;
+  scanner.stop().then(() => {
+    // fallback: pastikan semua track mati
+    try {
+      const stream = reader.srcObject;
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+      }
+    } catch(e) {}
+    modal.style.display = "none";
+  });
+}
+
+document.getElementById("btnScan").addEventListener("click", openScanner);
+document.getElementById("btnScanIpro").addEventListener("click", openScanner);
+
+// Scan File dari galeri
+const inputFile = document.getElementById("inputFile");
+document.getElementById("btnScanFile").addEventListener("click", () => {
+  inputFile.click();
+});
+
+inputFile.addEventListener("change", () => {
+  if (inputFile.files.length === 0) return;
+  const file = inputFile.files[0];
+
+  stopScanner();
+
+  scanner.scanFile(file, true)
+    .then(decoded => {
+      pilihProduk(`${decoded}, addpro`);
+      modal.style.display = "none";
+    })
+    .catch(err => alert("Tidak bisa membaca barcode: " + err));
+});
+
+// Tombol Tutup
+document.getElementById("closeScanner").addEventListener("click", stopScanner);
+</script>
+-->
+<!--
+<script>
+let scanner;
+
+const modal = document.getElementById("modalScanner");
+const reader = document.getElementById("reader");
+
+// Buka scanner
+function openScanner() {
+	modal.style.display = "flex";
+	scanner = new Html5Qrcode("reader");
+	scanner.start(
+		{ facingMode: "environment" },  // kamera belakang
+		{ fps: 12, qrbox: { width: 280, height: 200 } },
+		(decoded) => {
+			pilihProduk(`${decoded}, addpro`);
+			// stop scanner setelah berhasil
+			scanner.stop().then(() => {
+				modal.style.display = "none";
+			});
+		},
+		() => {} // ignore scanning errors
+	);
+}
+
+document.getElementById("btnScan").addEventListener("click", openScanner);
+document.getElementById("btnScanIpro").addEventListener("click", openScanner);
+
+// pilih gambar scan dari galeri perangkat
+const inputFile = document.getElementById("inputFile");
+const btnScanFile = document.getElementById("btnScanFile");
+btnScanFile.addEventListener("click", () => {
+	inputFile.click();
+});
+
+// ketika gambar dipilih untuk di scan
+inputFile.addEventListener("change", () => {
+  if (inputFile.files.length === 0) return;
+  const imageFile = inputFile.files[0];
+  // stop kamera dulu sebelum scan file
+  scanner.stop().then(() => {
+  	scanner.scanFile(imageFile, true)
+  	.then(decodedText => {
+  		pilihProduk(`${decodedText}, addpro`);
+  		modal.style.display = "none";
+  	})
+  	.catch(err => {
+  		alert("Tidak bisa membaca barcode! " + err); 
+  	});
+  });
+});
+
+// Tombol "Tutup"
+document.getElementById("closeScanner").addEventListener("click", () => {
+  if (scanner) scanner.stop();
+  modal.style.display = "none";
+});
+</script>
+-->
+	<script src="./scripts/script.js"></script>
+</body>
+</html>
