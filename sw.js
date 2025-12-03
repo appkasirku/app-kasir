@@ -4,15 +4,16 @@ const CACHE_NAME = "kasir-cache-v1";
 // File yang ingin di-cache saat instalasi SW
 const ASSETS_TO_CACHE = [
   "/",                       // halaman utama
-  "/index.html",
-  "/manifest.json",
-  "/assets/css/main.css",
-  "/assets/js/app.js",
-  "/assets/js/sw-register.js",
-  "/assets/sound/beep.mp3",
-  "/assets/sound/save.mp3",
-  "/assets/sound/update.mp3",
-  "/assets/sound/delete.mp3",
+  "/app-kasir/",
+  "/app-kasir/index.html",
+  "/app-kasir/manifest.json",
+  "/app-kasir/assets/css/main.css",
+  "/app-kasir/assets/js/app.js",
+  "/app-kasir/assets/js/sw-register.js",
+  "/app-kasir/assets/sound/beep.mp3",
+  "/app-kasir/assets/sound/save.mp3",
+  "/app-kasir/assets/sound/update.mp3",
+  "/app-kasir/assets/sound/delete.mp3",
 ];
 
 // Install SW dan cache aset
