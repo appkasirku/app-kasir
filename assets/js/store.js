@@ -11,10 +11,10 @@ function tampilkanDataTokoPreviewStruk() {
 	const terimaKasih = document.querySelector(".tk");
 	const data = JSON.parse(localStorage.getItem("dataToko"));
 	if (namaTokoJudul) namaTokoJudul.textContent = data?.namaToko ? `- ${data.namaToko}` : "";
-	if (namaToko) namaToko.textContent = data?.namaToko;
+	if (namaToko) namaToko.textContent = data?.namaToko || "Struk Belanja";
 	if (kontakToko) kontakToko.textContent = data?.kontakToko;
 	if (alamatToko) alamatToko.textContent = data?.alamatToko;
-	if (namaAdmin) namaAdmin.textContent = data?.namaAdmin;
+	if (namaAdmin) namaAdmin.textContent = data?.namaAdmin || "Admin";
 	if (terimaKasih) terimaKasih.innerHTML = data?.terimaKasih.split(", ").join("<br>") || "Terima Kasih";
 }
 
