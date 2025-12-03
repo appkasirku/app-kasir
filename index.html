@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="theme-color" content="#394150">
+	<title>App Kasir - Printer Thermal Bluetooth</title>
+	<link rel="icon" href="/assets/icon/icon-192.png">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="stylesheet" href="/assets/css/main.css">
+	<link rel="stylesheet" href="/assets/css/modal.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+	<div class="connection">
+		<div class="con-box">
+			<button data-tutup-modal-koneksi type="button" title="Tutup" class="close">
+				<i class="fa-solid fa-times"></i>
+			</button>
+			<h1>App Kasir</h1>
+			<h2>Printer Thermal Bluetooth</h2>
+			<button data-scan-bluetooth type="button">🔍 Cari &amp; Hubungkan</button>
+			<div id="status" class="status">Status: belum terhubung</div>
+			<p>Cetak/Print struk belanja silakan hubungkan <b>App Kasir</b> dengan  <b>Printer Thermal Bluetooth</b> Anda, klik tombol cari &amp; hubungkan di atas.</p>
+		</div>
+	</div>
+
+	<div id="formStruk" class="form-struk">
+		<div class="boxer">
+			<div class="title">
+				<h3>
+					<i class="fa-solid fa-receipt"></i>
+					Transaksi Belanja <span class="nama-toko"></span>
+				</h3>
+			</div>
+		
+			<form autocomplete="off">
+				<div class="box-form">
+					<div class="row">
+						<label>Nama / Merek</label>
+						<input id="namaBarang" type="search" placeholder="Kode / nama barang">
+						<div class="hasil-pencarian">
+							<ul id="hasilPencarian"></ul>
+						</div>
+					</div>
+					<div class="row flex">
+						<div>
+							<label>Harga</label>
+							<input id="hargaBarang" inputmode="numeric" placeholder="0">
+						</div>
+						<div>
+							<label>Jumlah</label>
+							<input id="jumlahBarang" inputmode="numeric" placeholder="0">
+						</div>
+					</div>
+					<div class="row flex">
+						<div>
+							<label>Total Harga</label>
+							<input id="totalHarga" inputmode="numeric" placeholder="0" readonly>
+						</div>
+						<div>
+							<label>Diskon</label>
+							<input id="diskonHarga" inputmode="numeric" placeholder="0" readonly>
+						</div>
+					</div>
+					<hr>
+					<div class="row flex">
+						<div>
+							<label>Total Diskon</label>
+							<input id="totalDiskon" inputmode="numeric" placeholder="0" readonly>
+						</div>
+						<div class="flex-action" style="margin-top:22px">
+							<button id="btnScan" type="button" title="Scan" class="btnscan">
+								<i class="fa-solid fa-barcode"></i>
+							</button>
+							<button id="inputTransaksi" type="submit" title="Tambah">
+								<i class="fa-solid fa-plus"></i>
+							</button>
+						</div>
+					</div>
+					<div class="btn-per-pro">
+						<button id="bukaPengaturan" type="button" title="Pengaturan Toko">
+							<i class="fa-solid fa-gear"></i> Toko
+						</button>
+						<button id="perbesar" class="perbesar" type="button" title="Lihat Struk">
+							<i class="fa-solid fa-eye"></i> Lihat
+						</button>
+					</div>
+					<div class="btn-per-pro mt10">
+						<button id="prosesPrint" type="button" title="Bayar">
+							Bayar <i class="fa-solid fa-hand-holding-dollar"></i>
+						</button>
+					</div>
+				</div>
+				
+				<div id="previewStruk" class="box-prev">
+					<div class="preview">
+						<h4 class="toko"></h4>
+						<p class="kontak"></p>
+						<p class="alamat"></p>
+						<hr>
+						<div class="kasir flex">
+							<span>Kasir</span>
+							<span class="nama">Admin</span>
+						</div>
+						<div class="waktu flex">
+							<span>Tanggal</span>
+							<span class="tanggal"></span>
+						</div>
+						<hr>
+						<div class="produk">
+							<div style="padding:4px;text-align:center;color:#aaa;font-weight:bold">Struk Belanja</div>
+						</div>
+						<hr>
+						<div class="flex">
+							<span>Subtotal</span>
+							<span class="el-subtotal">0</span>
+						</div>
+						<div class="flex">
+							<span>Total Diskon</span>
+							<span class="el-diskon">0</span>
+						</div>
+						<div class="flex">
+							<span>Total Belanja</span>
+							<span class="el-total">0</span>
+						</div>
+						<hr>
+						<div class="flex">
+							<span>Dibayar</span>
+							<span class="el-bayar">0</span>
+						</div>
+						<div class="flex">
+							<span>Kembalian</span>
+							<span class="el-kembali">0</span>
+						</div>
+						<hr>
+						<div class="tq">
+							<p class="tk"></p>
+						</div>
+					</div>
+					
+					<div class="btn-print" style="margin:20px 0 10px">
+						<button id="tutup" class="tutup" type="button" title="Tutup">
+							<i class="fa-solid fa-times"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+			
+			<div class="keranjang">
+				<table id="tabelKeranjang">
+					<tbody>
+						<tr>
+							<td class="no-krj">Belum Ada Transaksi di Daftar Belanja</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div class="setting-box">
+				<form id="dataToko" autocomplete="off">
+					<h3>Data Toko</h3>
+					<div class="row">
+						<label>Nama Toko</label>
+						<input type="text" placeholder="contoh: Toko Beras Adi Jaya">
+					</div>
+					<div class="row">
+						<label>Kontak Toko</label>
+						<input type="text" placeholder="contoh: 0812 8524 2366">
+					</div>
+					<div class="row">
+						<label>Alamat Toko</label>
+						<input type="text" placeholder="contoh: Jl. 20 Desember RT2/RW4">
+					</div>
+					<div class="row">
+						<label>Nama Admin</label>
+						<input type="text" placeholder="contoh: Arnadi">
+					</div>
+					<div class="row">
+						<label>Terima Kasih</label>
+						<input type="text" placeholder="Terima Kasih, Sudah Berbelanja">
+					</div>
+					<div class="row tc">
+						<button id="tutupPengaturan" type="reset" title="Tutup">
+							<i class="fa-solid fa-times-circle"></i> Tutup
+						</button>
+						<button id="simpanDataToko" type="submit" title="Simpan">
+							<i class="fa-solid fa-save"></i> Simpan
+						</button>
+					</div>
+				</form>
+			</div>
+			
+			<div id="modalScanner" class="modal-scanner">
+				<div class="modal-content">
+					<p>Arahkan kamera ke Barcode / Qr Code</p>
+					<div id="reader" class="scanner-box"></div>
+					<div class="scan-line"></div>
+					<div id="focusDot" class="autofocus-dot"></div>
+					<div id="flashCtrl" class="flash-btn">
+					  <button id="btnFlash" type="button">
+					    <i class="fa-solid fa-bolt"></i>
+					  </button>
+					</div>
+					<div id="scanFile" class="scan-file">
+						<input id="inputFile" type="file" accept="image/*" style="display:none">
+						<button id="btnScanFile" type="button" title="Scan File">
+							<i class="fa-solid fa-image"></i>
+						</button>
+					</div>
+					<button id="closeScanner" class="close-btn">Tutup</button>
+				</div>
+			</div>
+			
+			<div class="tambah-produk">
+				<button id="bukaFormProduk" type="button" title="Tambah Produk">
+					<i class="fa-solid fa-plus"></i>
+				</button>
+			</div>
+			
+			<div class="input-produk">
+				<form id="formProduk" autocomplete="off">
+					<h3>Tambah Produk</h3>
+					<div class="row">
+						<label>Nama/Merek (max 20)</label>
+						<input id="inputFormNama" type="text" placeholder="contoh: Rojolele Super">
+					</div>
+					<div class="row flex">
+						<div>
+							<label>Ukuran (max 10)</label>
+							<input id="inputFormUkuran" type="text" placeholder="contoh: 5 Kg">
+						</div>
+						<div>
+							<label>Kode (max 15)</label>
+							<input id="inputFormKode" type="text" placeholder="contoh: BRJ5K">
+						</div>
+					</div>
+					<div class="row flex">
+						<div>
+							<label>Harga Jual (max 10)</label>
+							<input id="inputFormHarga" inputmode="numeric" placeholder="contoh: 75.000">
+						</div>
+						<button id="btnScanIpro" class="btnscan" type="button" title="Scan" style="margin-top:24px">
+							<i class="fa-solid fa-barcode"></i>
+						</button>
+					</div>
+					<div class="row tc">
+						<button id="tutupFormProduk" type="reset" title="Tutup">
+						  <i class="fa-solid fa-times-circle"></i> Tutup
+						</button>
+						<button id="simpanFormProduk" type="submit" title="Simpan">
+						  <i class="fa-solid fa-save"></i> Simpan
+						</button>
+					</div>
+				</form>
+				<ol id="tampilkanDaftarProduk"></ol>
+			</div>
+		
+		</div>
+	</div>
+
+	<audio id="soundBeep" src="./assets/sound/beep.mp3" preload="auto"></audio>
+	<audio id="soundSave" src="./assets/sound/save.mp3" preload="auto"></audio>
+	<audio id="soundUpdate" src="./assets/sound/update.mp3" preload="auto"></audio>
+	<audio id="soundDelete" src="./assets/sound/delete.mp3" preload="auto"></audio>
+	
+	<script type="module">
+		import { Register } from "./assets/js/sw-register.js";
+		window.addEventListener("load", Register.setServiceWorker);
+	</script>
+	
+	<script src="https://unpkg.com/html5-qrcode"></script>
+	<script type="module" src="./assets/js/app.js"></script>
+</body>
+</html>
