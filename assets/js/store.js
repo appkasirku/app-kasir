@@ -15,7 +15,7 @@ function tampilkanDataTokoPreviewStruk() {
 	if (kontakToko) kontakToko.textContent = data?.kontakToko;
 	if (alamatToko) alamatToko.textContent = data?.alamatToko;
 	if (namaAdmin) namaAdmin.textContent = data?.namaAdmin;
-	if (terimaKasih) terimaKasih.innerHTML = data?.terimaKasih.split(", ").join("<br>");
+	if (terimaKasih) terimaKasih.innerHTML = data?.terimaKasih.split(", ").join("<br>") || "Terima Kasih";
 }
 
 // fungsi simpan data toko
