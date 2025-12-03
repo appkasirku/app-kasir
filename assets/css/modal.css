@@ -1,0 +1,130 @@
+/* Modal Scanner */
+.modal-scanner {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+}
+.modal-scanner .modal-content {
+  background: #394150;
+  padding: 15px;
+  border-radius: 0;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+}
+.modal-scanner .scanner-box {
+  width: 100%;
+  height: 320px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+}
+.modal-scanner .modal-content p {
+	color: #aaa;
+	margin-bottom: 5px;
+	text-align: left;
+}
+.modal-scanner .modal-content .scan-file {
+	position: absolute;
+	right: 25px;
+	bottom: 80px;
+	z-index: 999;
+}
+.modal-scanner .modal-content .scan-file button {
+	background: transparent;
+	border: 0;
+	box-shadow: 0 0 0 1px #fff;
+	font-size: 26px;
+	color: #fff;
+	border-radius: 4px;
+	padding: 0;
+	margin: 0;
+	width: 32px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.modal-scanner .close-btn {
+  margin-top: 10px;
+  width: 100%;
+  background: #ef4444;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Garis merah animasi */
+.modal-scanner .scan-line {
+  position: absolute;
+  top: 163px;
+  width: 100%;
+  width: 270px;
+  height: 1px;
+  background: #0f0;
+  animation: scanMove 2.2s infinite;
+  opacity: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+}
+.modal-scanner .scan-line.show {
+	display: block;
+}
+
+@keyframes scanMove {
+  0% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 70px); }
+  100% { transform: translate(-50%, 0); }
+}
+
+/* Tombol flash */
+.modal-scanner .flash-btn {
+  position: absolute;
+  left: 25px;
+  bottom: 80px;
+  z-index: 999;
+}
+
+.modal-scanner .flash-btn button {
+  background: transparent;
+  border: 0;
+  box-shadow: 0 0 0 1px #fff;
+  font-size: 26px;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  width: 32px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Autofocus indikator */
+.modal-scanner .autofocus-dot {
+  position: absolute;
+  top: 20px;
+  right: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #00ff00;
+  box-shadow: 0 0 10px #0f0;
+  animation: blinkDot 1.5s infinite;
+}
+
+@keyframes blinkDot {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
