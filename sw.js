@@ -3,8 +3,7 @@ const CACHE_NAME = "kasir-cache-v1";
 
 // File yang ingin di-cache saat instalasi SW
 const ASSETS_TO_CACHE = [
-  "/",                       // halaman utama
-  "/app-kasir/",
+  "/app-kasir/",                       // halaman utama
   "/app-kasir/index.html",
   "/app-kasir/manifest.json",
   "/app-kasir/assets/css/main.css",
