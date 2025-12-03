@@ -259,17 +259,17 @@
 		</div>
 	</div>
 
-	<audio id="soundBeep" src="./assets/sound/beep.mp3" preload="auto"></audio>
-	<audio id="soundSave" src="./assets/sound/save.mp3" preload="auto"></audio>
-	<audio id="soundUpdate" src="./assets/sound/update.mp3" preload="auto"></audio>
-	<audio id="soundDelete" src="./assets/sound/delete.mp3" preload="auto"></audio>
+	<audio id="soundBeep" src="/app-kasir/assets/sound/beep.mp3" preload="auto"></audio>
+	<audio id="soundSave" src="/app-kasir/assets/sound/save.mp3" preload="auto"></audio>
+	<audio id="soundUpdate" src="/app-kasir/assets/sound/update.mp3" preload="auto"></audio>
+	<audio id="soundDelete" src="/app-kasir/assets/sound/delete.mp3" preload="auto"></audio>
 	
 	<script type="module">
-		import { Register } from "./assets/js/sw-register.js";
+		import { Register } from "/app-kasir/assets/js/sw-register.js";
 		window.addEventListener("load", Register.setServiceWorker);
 	</script>
 	
 	<script src="https://unpkg.com/html5-qrcode"></script>
-	<script type="module" src="./assets/js/app.js"></script>
+	<script type="module" src="/app-kasir/assets/js/app.js"></script>
 </body>
 </html>
