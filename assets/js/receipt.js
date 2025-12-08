@@ -59,6 +59,11 @@ function elementOnInput() {
   });
 }
 
+// fungsi reset form pengaturan
+function resetPengaturan() {
+  document.querySelector("form#dataStruk")?.reset();
+}
+
 // fungsi buka pengaturan data struk
 function bukaPengaturanStruk() {
 	document.querySelector(".setting-box").classList.add("show");
@@ -71,11 +76,13 @@ function bukaPengaturanStruk() {
 function tutupPengaturanStruk() {
 	document.querySelector(".setting-box").classList.remove("show");
 	document.querySelector("body").classList.remove("overhide");
+	resetPengaturan();
 }
 
 export const Struk = {
 	simpanDataStruk,
 	muatDataStruk,
+	resetPengaturan,
 	bukaPengaturanStruk,
 	tutupPengaturanStruk,
 	tampilkanDataStrukPreviewStruk

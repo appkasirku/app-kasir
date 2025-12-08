@@ -76,19 +76,25 @@ document.querySelector("#prosesPrint")?.addEventListener("click", () => {
 // tombol simpan data struk
 document.querySelector("#simpanDataStruk")?.addEventListener("click", Struk.simpanDataStruk);
 
+// tombol reset form pengaturan
+document.querySelector("#resetPengaturan")?.addEventListener("click", Struk.resetPengaturan);
+
 // tombol buka pengaturan struk
 document.querySelector("#bukaPengaturan")?.addEventListener("click", Struk.bukaPengaturanStruk);
 
 // tombol tutup pengaturan struk
 document.querySelector("#tutupPengaturan")?.addEventListener("click", Struk.tutupPengaturanStruk);
 
-// tombol buka form input produk
+// tombol reset form produk
+document.querySelector("#resetFormProduk")?.addEventListener("click", Produk.resetFormProduk);
+
+// tombol buka form produk
 document.querySelector("#bukaFormProduk")?.addEventListener("click", () => {
 	Produk.bukaFormProduk();
 	Produk.validasiInputProduk();
 });
 
-// tombol tutup modal form input produk
+// tombol tutup modal form produk
 document.querySelector("#tutupFormProduk")?.addEventListener("click", Produk.tutupFormProduk);
 
 // tombol simpan data produk

@@ -18,6 +18,9 @@ function validasiInputProduk() {
 		}
 		if (el.id === "inputFormHarga") {
 			el.value = Helpers.inputFormatHarga(el);
+			if (el.value === "0") {
+			  el.value = "";
+			}
 		}
 	});
 }
@@ -45,6 +48,11 @@ function editProduk(kode) {
   localStorage.setItem("produkSedangDiedit", kode);
 }
 
+// fungsi ubah kode produk
+function ubahKodeProduk() {
+  document.querySelector("#formProduk #inputFormKode")?.focus();
+}
+
 // fungsi hapus produk
 function hapusProduk(kode) {
 	const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
@@ -62,7 +70,7 @@ function hapusProduk(kode) {
 		btn: {
 			batal: { text: 'Batal' },
 			hapus: {
-				text: 'Lanjut hapus',
+				text: 'Lanjut Hapus',
 				rule: 'hapus-data-produk',
 				target: kode
 			}
@@ -205,12 +213,31 @@ function simpanFormProduk(e) {
     localStorage.removeItem("produkSedangDiedit");
   } else {
     // MODE TAMBAH
-    daftarProduk.push({
-      namaProduk: nama,
-      beratProduk: berat,
-      kodeProduk: kode,
-      hargaProduk: harga,
-    });
+    const kodeIndex = daftarProduk.findIndex(p => p.kodeProduk === kode);
+    if (kodeIndex === -1 ) {
+      daftarProduk.push({
+        namaProduk: nama,
+        beratProduk: berat,
+        kodeProduk: kode,
+        hargaProduk: harga,
+      });
+    } else {
+      return Modal.modalInfo({
+        title: 'Duplikat Produk',
+        body: `Produk dengan kode <b>${kode}</b> sudah ada di tabel.`,
+        btn: {
+          edit: {
+            text: 'Ubah Kode',
+            rule: 'ubah-kode-produk'
+          },
+          oke: {
+            text: 'Perbarui',
+            rule: 'pilih-edit-data-produk',
+            target: kode
+          }
+        }
+      });
+    }
   }
   localStorage.setItem("dataProduk", JSON.stringify(daftarProduk));
 	document.querySelector("#formProduk").reset();
@@ -223,6 +250,11 @@ function simpanFormProduk(e) {
 	}
 }
 
+// fungsi reset form produk
+function resetFormProduk() {
+  document.querySelector("#formProduk")?.reset();
+}
+
 // fungsi buka form produk
 function bukaFormProduk() {
 	document.querySelector("body").classList.add("overhide");
@@ -232,17 +264,17 @@ function bukaFormProduk() {
 
 // fungsi tutup form produk
 function tutupFormProduk() {
-	document.querySelector("body").classList.remove("overhide");
-	document.querySelector(".input-produk").classList.remove("show");
-	const formProduk = document.querySelector("#formProduk");
-	if (!formProduk) return;
-	formProduk.reset();
+	document.querySelector("body")?.classList.remove("overhide");
+	document.querySelector(".input-produk")?.classList.remove("show");
+	resetFormProduk();
 }
 
 export const Produk = {
 	bukaFormProduk,
 	tutupFormProduk,
+	resetFormProduk,
 	editProduk,
+	ubahKodeProduk,
 	hapusProduk,
 	hapusDataProduk,
 	simpanFormProduk,
