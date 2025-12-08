@@ -196,7 +196,7 @@ function editKeranjang(i) {
 	Modal.modalInfo({
 		title: `Edit - ${p.namaBarang}`,
 		body: `
-			<form id="editKeranjang">
+			<form id="editKeranjang" autocomplete="off">
 				<div class="row">
 					<label>Jumlah Produk</label>
 					<input id="jumlah" inputmode="numeric" value="${Helpers.formatRupiah(p.jumlahBarang)}" placeholder="0">
@@ -210,7 +210,7 @@ function editKeranjang(i) {
 		btn: {
 			batal: { text: 'Batal' },
 			oke: {
-				text: '<i class="fa-solid fa-save"></i> Simpan',
+				text: 'Simpan',
 				rule: 'edit-data-keranjang',
 				target: i
 			}
@@ -453,7 +453,7 @@ function modalPembayaran() {
   Modal.modalInfo({
 		title: 'Form Pembayaran',
 		body: `
-			<form id="formPembayaran">
+			<form id="formPembayaran" autocomplete="off">
 				<div class="row">
 					<label>Nominal Bayar</label>
 					<input id="nominalBayar" inputmode="numeric">
