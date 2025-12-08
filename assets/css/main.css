@@ -24,7 +24,7 @@ button {
 	cursor: default;
 }
 button:hover {
-  opacity: .9;
+  opacity: .8;
 }
 .connection {
 	background: #39415090;
@@ -743,9 +743,13 @@ button:hover {
 	gap: 10px;
 	margin-top: 20px;
 }
-.setting-box .row.tc button[type="reset"] {
-	background: #39415099;
+.setting-box .row.tc button[type="button"] {
+  background: #39415090;
 }
+.setting-box .row.tc button[type="reset"] {
+	background: chocolate;
+}
+.setting-box .row.tc button[type="button"],
 .setting-box .row.tc button[type="reset"],
 .setting-box .row.tc button[type="submit"] {
 	flex: 1;
@@ -801,9 +805,13 @@ button:hover {
 	justify-content: center;
 	gap: 10px;
 }
-.input-produk .row.tc button[type="reset"] {
-	background: #39415099;
+.input-produk .row.tc button[type="button"] {
+  background: #39415090;
 }
+.input-produk .row.tc button[type="reset"] {
+	background: chocolate;
+}
+.input-produk .row.tc button[type="button"],
 .input-produk .row.tc button[type="reset"],
 .input-produk .row.tc button[type="submit"] {
 	flex: 1;
