@@ -2,47 +2,106 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<meta name="theme-color" content="#394150">
-	<title>App Kasir - Printer Thermal Bluetooth</title>
-	<link rel="icon" href="/app-kasir//assets/icon/icon-192.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>App Kasir | Aplikasi Kasir UMKM &amp; Print Struk Bluetooth</title>
+  <meta name="description" content="App Kasir adalah aplikasi kasir sederhana untuk UMKM dengan fitur cetak struk langsung ke printer Bluetooth, kelola transaksi, hitung kembalian otomatis, dan laporan penjualan.">
+  <meta name="keywords" content="app kasir, aplikasi kasir, aplikasi kasir umkm, kasir online, kasir bluetooth, cetak struk bluetooth, aplikasi struk belanja, kasir pwa, aplikasi kasir gratis">
+  <meta name="author" content="App Kasir">
+  <meta property="og:title" content="App Kasir - Aplikasi Kasir UMKM & Print Struk Bluetooth">
+  <meta property="og:description" content="App Kasir membantu UMKM mencatat transaksi dengan cepat dan mencetak struk langsung ke printer Bluetooth secara otomatis.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://appkasirku.github.io/app-kasir/">
+  <meta property="og:image" content="/app-kasir/assets/icon/icon-192.png">
+  <meta name="theme-color" content="#394150">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="App Kasir">
+	<link rel="icon" href="/app-kasir/assets/icon/icon-192.png">
 	<link rel="manifest" href="/app-kasir/manifest.json">
 	<link rel="stylesheet" href="/app-kasir/assets/css/main.css">
 	<link rel="stylesheet" href="/app-kasir/assets/css/modal.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-	<div class="connection">
-		<div class="con-box">
-			<button data-tutup-modal-koneksi type="button" title="Tutup" class="close">
-				<i class="fa-solid fa-times"></i>
-			</button>
-			<h1>App Kasir</h1>
-			<h2>Printer Thermal Bluetooth</h2>
-			<button data-scan-bluetooth type="button">
-			  <i class="fa-solid fa-search"></i> Cari &amp; Hubungkan
-			 </button>
-			<div id="status" class="status">Status: belum terhubung</div>
-			<p>Cetak/Print struk belanja <i class="fa-solid fa-angle-right"></i> silakan hubungkan <b>App Kasir</b> dengan  <b>Printer Thermal Bluetooth</b> Anda <i class="fa-solid fa-angle-right"></i> klik tombol <b><i class="fa-solid fa-search"></i> Cari &amp; Hubungkan</b> di atas.</p>
-		</div>
-	</div>
 
 	<div id="formStruk" class="form-struk">
 		<div class="boxer">
-			<div class="title">
-				<h3>
-					<i class="fa-solid fa-receipt"></i>
-					Transaksi Belanja <span class="nama-toko"></span>
-				</h3>
-			</div>
 		
 			<form autocomplete="off">
+				<div id="previewStruk" class="box-prev">
+				  <div class="title-box">
+				    <h3>
+				      <i class="fa-solid fa-receipt"></i> Preview Struk
+				      </h3>
+				  </div>
+					<div class="preview">
+						<h4 class="toko">Toko Adi Jaya</h4>
+						<p class="kontak">WhatsApp: 0812 8524 2366</p>
+						<p class="alamat">Jl. 20 Desember, Pegadungan, Kalideres, Jakarta Barat</p>
+						<hr>
+						<div class="kasir flex">
+							<span>Kasir</span>
+							<span class="nama">Arnadi</span>
+						</div>
+						<div class="waktu flex">
+							<span>Tanggal</span>
+							<span class="tanggal">5 Nov 2025 00:00</span>
+						</div>
+						<hr>
+						<div class="produk">
+							<div class="no-list">Struk Belanja</div>
+						</div>
+						<hr>
+						<div class="flex">
+							<span>Subtotal</span>
+							<span class="el-subtotal">0</span>
+						</div>
+						<div class="flex">
+							<span>Total Diskon</span>
+							<span class="el-diskon">0</span>
+						</div>
+						<div class="flex">
+							<span>Total Belanja</span>
+							<span class="el-total">0</span>
+						</div>
+						<div class="flex">
+							<span>Dibayar</span>
+							<span class="el-bayar">0</span>
+						</div>
+						<div class="flex">
+							<span>Kembalian</span>
+							<span class="el-kembali">0</span>
+						</div>
+						<hr>
+						<div class="tq">
+							<p class="tk">Terima Kasih<br>Sudah Berbelanja</p>
+						</div>
+					</div>
+					
+					<div class="btn-print" style="margin:20px 0 10px">
+						<button id="tutup" class="tutup" type="button" title="Tutup">
+							<i class="fa-solid fa-times"></i>
+						</button>
+					</div>
+				</div>
+				
 				<div class="box-form">
+    			<div class="title">
+    				<h3>
+    				  App Kasir <i class="fa-solid fa-cash-register"></i> Penjualan
+    				</h3>
+    			</div>
 					<div class="row">
 						<label>Nama / Merek</label>
 						<input id="namaBarang" type="search" placeholder="Kode / nama barang">
 						<div class="hasil-pencarian">
-							<ul id="hasilPencarian"></ul>
+						  <div class="box-hasil">
+  						  <button id="tutupHasilPencarian" type="button" title="Tutup">
+  						    <i class="fa-solid fa-times"></i>
+  						  </button>
+  							<ul id="hasilPencarian"></ul>
+						  </div>
 						</div>
 					</div>
 					<div class="row flex">
@@ -71,79 +130,32 @@
 							<label>Total Diskon</label>
 							<input id="totalDiskon" inputmode="numeric" placeholder="0" readonly>
 						</div>
-						<div class="flex-action" style="margin-top:22px">
+						<div class="flex-action">
 							<button id="btnScan" type="button" title="Scan" class="btnscan">
 								<i class="fa-solid fa-barcode"></i>
 							</button>
 							<button id="inputTransaksi" type="submit" title="Tambah">
-								<i class="fa-solid fa-plus"></i>
+  							<i class="fa-solid fa-file-circle-plus"></i>
 							</button>
 						</div>
 					</div>
 					<div class="btn-per-pro">
-						<button id="bukaPengaturan" type="button" title="Pengaturan Toko">
-							<i class="fa-solid fa-gear"></i> Toko
-						</button>
 						<button id="perbesar" class="perbesar" type="button" title="Lihat Struk">
-							<i class="fa-solid fa-eye"></i> Lihat
+							<i class="fa-solid fa-receipt"></i> Lihat
+						</button>
+            <button id="bukaFormProduk" type="button" title="Tambah Produk" class="tambah-produk">
+              <i class="fa-solid fa-plus-circle"></i>
+            </button>
+						<button id="bukaPengaturan" type="button" title="Pengaturan Struk">
+							Struk <i class="fa-solid fa-gear"></i>
 						</button>
 					</div>
-					<div class="btn-per-pro mt10">
+					<div class="btn-per-pro mt">
+					  <button id="kosongkan" type="button" title="Kosongkan">
+					    <i class="fa-solid fa-trash-can"></i> Struk
+					  </button>
 						<button id="prosesPrint" type="button" title="Bayar">
 							Bayar <i class="fa-solid fa-hand-holding-dollar"></i>
-						</button>
-					</div>
-				</div>
-				
-				<div id="previewStruk" class="box-prev">
-					<div class="preview">
-						<h4 class="toko"></h4>
-						<p class="kontak"></p>
-						<p class="alamat"></p>
-						<hr>
-						<div class="kasir flex">
-							<span>Kasir</span>
-							<span class="nama">Admin</span>
-						</div>
-						<div class="waktu flex">
-							<span>Tanggal</span>
-							<span class="tanggal"></span>
-						</div>
-						<hr>
-						<div class="produk">
-							<div style="padding:4px;text-align:center;color:#aaa;font-weight:bold">Struk Belanja</div>
-						</div>
-						<hr>
-						<div class="flex">
-							<span>Subtotal</span>
-							<span class="el-subtotal">0</span>
-						</div>
-						<div class="flex">
-							<span>Total Diskon</span>
-							<span class="el-diskon">0</span>
-						</div>
-						<div class="flex">
-							<span>Total Belanja</span>
-							<span class="el-total">0</span>
-						</div>
-						<hr>
-						<div class="flex">
-							<span>Dibayar</span>
-							<span class="el-bayar">0</span>
-						</div>
-						<div class="flex">
-							<span>Kembalian</span>
-							<span class="el-kembali">0</span>
-						</div>
-						<hr>
-						<div class="tq">
-							<p class="tk"></p>
-						</div>
-					</div>
-					
-					<div class="btn-print" style="margin:20px 0 10px">
-						<button id="tutup" class="tutup" type="button" title="Tutup">
-							<i class="fa-solid fa-times"></i>
 						</button>
 					</div>
 				</div>
@@ -152,16 +164,14 @@
 			<div class="keranjang">
 				<table id="tabelKeranjang">
 					<tbody>
-						<tr>
-							<td class="no-krj">Belum Ada Transaksi di Daftar Belanja</td>
-						</tr>
+						<tr class="no-krj"></tr>
 					</tbody>
 				</table>
 			</div>
 			
 			<div class="setting-box">
-				<form id="dataToko" autocomplete="off">
-					<h3>Data Toko</h3>
+				<form id="dataStruk" autocomplete="off">
+					<h3>Pengaturan Data Struk</h3>
 					<div class="row">
 						<label>Nama Toko</label>
 						<input type="text" placeholder="contoh: Toko Beras Adi Jaya">
@@ -186,38 +196,11 @@
 						<button id="tutupPengaturan" type="reset" title="Tutup">
 							<i class="fa-solid fa-times-circle"></i> Tutup
 						</button>
-						<button id="simpanDataToko" type="submit" title="Simpan">
+						<button id="simpanDataStruk" type="submit" title="Simpan">
 							<i class="fa-solid fa-save"></i> Simpan
 						</button>
 					</div>
 				</form>
-			</div>
-			
-			<div id="modalScanner" class="modal-scanner">
-				<div class="modal-content">
-					<p>Arahkan kamera ke Barcode / Qr Code</p>
-					<div id="reader" class="scanner-box"></div>
-					<div class="scan-line"></div>
-					<div id="focusDot" class="autofocus-dot"></div>
-					<div id="flashCtrl" class="flash-btn">
-					  <button id="btnFlash" type="button">
-					    <i class="fa-solid fa-bolt"></i>
-					  </button>
-					</div>
-					<div id="scanFile" class="scan-file">
-						<input id="inputFile" type="file" accept="image/*" style="display:none">
-						<button id="btnScanFile" type="button" title="Scan File">
-							<i class="fa-solid fa-image"></i>
-						</button>
-					</div>
-					<button id="closeScanner" class="close-btn">Tutup</button>
-				</div>
-			</div>
-			
-			<div class="tambah-produk">
-				<button id="bukaFormProduk" type="button" title="Tambah Produk">
-					<i class="fa-solid fa-plus"></i>
-				</button>
 			</div>
 			
 			<div class="input-produk">
@@ -260,6 +243,42 @@
 		
 		</div>
 	</div>
+	
+	<div id="modalScanner" class="modal-scanner">
+		<div class="modal-content">
+			<p>Arahkan kamera ke Barcode / Qr Code</p>
+			<div id="reader" class="scanner-box"></div>
+			<div class="scan-line"></div>
+			<div id="focusDot" class="autofocus-dot"></div>
+			<div id="flashCtrl" class="flash-btn">
+			  <button id="btnFlash" type="button">
+			    <i class="fa-solid fa-bolt"></i>
+			  </button>
+			</div>
+			<div id="scanFile" class="scan-file">
+				<input id="inputFile" type="file" accept="image/*" style="display:none">
+				<button id="btnScanFile" type="button" title="Scan File">
+					<i class="fa-solid fa-image"></i>
+				</button>
+			</div>
+			<button id="closeScanner" class="close-btn">Tutup</button>
+		</div>
+	</div>
+	
+	<div class="connection">
+		<div class="con-box">
+			<button data-tutup-modal-koneksi type="button" title="Tutup" class="close">
+				<i class="fa-solid fa-times"></i>
+			</button>
+			<h1>App Kasir</h1>
+			<h2>Printer Thermal Bluetooth</h2>
+			<button data-scan-bluetooth type="button">
+			  <i class="fa-solid fa-search"></i> Cari &amp; Hubungkan
+			 </button>
+			<div id="status" class="status">Status: belum terhubung</div>
+			<p>Cetak/Print struk belanja <i class="fa-solid fa-angle-down"></i> <br>hubungkan <b>App Kasir</b> <i class="fa-solid fa-angle-right"></i> <b>Printer <br>Thermal Bluetooth</b> Anda <i class="fa-solid fa-angle-right"></i> klik <br><b><i class="fa-solid fa-search"></i> Cari &amp; Hubungkan</b> <i class="fa-solid fa-angle-up"></i></p>
+		</div>
+	</div>
 
 	<audio id="soundBeep" src="/app-kasir/assets/sound/beep.mp3" preload="auto"></audio>
 	<audio id="soundSave" src="/app-kasir/assets/sound/save.mp3" preload="auto"></audio>
@@ -273,5 +292,6 @@
 	
 	<script src="https://unpkg.com/html5-qrcode"></script>
 	<script type="module" src="/app-kasir/assets/js/app.js"></script>
+	
 </body>
 </html>
