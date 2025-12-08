@@ -253,6 +253,10 @@ function simpanFormProduk(e) {
 // fungsi reset form produk
 function resetFormProduk() {
   document.querySelector("#formProduk")?.reset();
+  const kodeEdit = localStorage.getItem("produkSedangDiedit");
+  if (kodeEdit) {
+    localStorage.removeItem("produkSedangDiedit");
+  }
 }
 
 // fungsi buka form produk
@@ -260,6 +264,10 @@ function bukaFormProduk() {
 	document.querySelector("body").classList.add("overhide");
 	document.querySelector(".input-produk").classList.add("show");
 	tampilkanDaftarProduk();
+	const kodeEdit = localStorage.getItem("produkSedangDiedit");
+  if (kodeEdit) {
+    localStorage.removeItem("produkSedangDiedit");
+  }
 }
 
 // fungsi tutup form produk
