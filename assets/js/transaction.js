@@ -239,7 +239,7 @@ function hapusKeranjang(i) {
 		btn: {
 			batal: { text: 'Batal' },
 			hapus: {
-				text: 'Ya, hapus',
+				text: 'Lanjut hapus',
 				rule: 'hapus-data-keranjang',
 				target: i
 			}

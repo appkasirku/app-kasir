@@ -62,7 +62,7 @@ function hapusProduk(kode) {
 		btn: {
 			batal: { text: 'Batal' },
 			hapus: {
-				text: 'Ya, hapus',
+				text: 'Lanjut hapus',
 				rule: 'hapus-data-produk',
 				target: kode
 			}
