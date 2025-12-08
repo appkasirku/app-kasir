@@ -7,6 +7,7 @@ import { Produk } from './product.js';
 function modalInfo(data) {
 	const body = document.querySelector("body");
 	const modalEl = document.createElement("div");
+	body.classList.remove("overhide");
 	modalEl.classList.add("modal-info");
 	const modalHtml = `
 		<div class="modal-content">
@@ -17,14 +18,16 @@ function modalInfo(data) {
 				<div>${data.body ?? "(-_-)"}</div>
 			</div>
 			<div class="modal-footer">
-				${data.btn.close ? `<button data-modal-close data-rule="${data.btn.close.rule}" type="button" title="${Helpers.stripHTML(data.btn.close.text)}">${data.btn.close.text}</button>` : ""}
+				${data.btn.batal ? `<button data-modal-batal data-rule="${data.btn.batal.rule}" type="button" title="${Helpers.stripHTML(data.btn.batal.text)}">${data.btn.batal.text}</button>` : ""}
+				${data.btn.edit ? `<button data-modal-edit data-rule="${data.btn.edit.rule}" data-target="${data.btn.edit.target}" type="button" title="${Helpers.stripHTML(data.btn.edit.text)}" class="edit">${data.btn.edit.text}</button>` : ""}
+				${data.btn.hapus ? `<button data-modal-hapus data-rule="${data.btn.hapus.rule}" data-target="${data.btn.hapus.target}" type="button" title="${Helpers.stripHTML(data.btn.hapus.text)}" class="hapus">${data.btn.hapus.text}</button>` : ""}
 				${data.btn.oke ? `<button data-modal-oke data-rule="${data.btn.oke.rule}" data-target="${data.btn.oke.target}" type="button" title="${Helpers.stripHTML(data.btn.oke.text)}" class="oke">${data.btn.oke.text}</button>` : ""}
 			</div>
 		</div>
 	`;
 	body.appendChild(modalEl);
 	modalEl.innerHTML = modalHtml;
-	document.querySelector("#bukaFormProduk").style.display = "none";
+	body.classList.add("overhide");
 }
 
 // fungsi aksi modal info
@@ -35,17 +38,29 @@ async function aksiModal(rule, target) {
 	} else if (rule === "simpan-data-produk" && target !== undefined) {
 		simpanDataProduk(target);
 		tutupModalInfo();
+	} else if (rule === "pilih-hapus-data-keranjang" && target !== undefined) {
+	  Transaksi.hapusKeranjang(target);
+	  tutupModalInfo();
 	} else if (rule === "hapus-data-keranjang" && target !== undefined) {
 		Transaksi.hapusDataKeranjang(target);
+		tutupModalInfo();
+	} else if(rule === "hapus-data-transaksi-terakhir" && target !== undefined) {
+	  Transaksi.hapusDataTransaksiTerakhir(target);
+	  tutupModalInfo();
+	} else if (rule === "pilih-hapus-data-produk" && target !== undefined) {
+		Produk.hapusProduk(target);
 		tutupModalInfo();
 	} else if (rule === "hapus-data-produk" && target !== undefined) {
 		Produk.hapusDataProduk(target);
 		tutupModalInfo();
+	} else if (rule === "pilih-edit-data-keranjang" && target !== undefined) {
+	  Transaksi.editKeranjang(target);
+	  tutupModalInfo();
 	} else if (rule === "edit-data-keranjang" && target !== undefined) {
 		if (!Transaksi.editDataKeranjang(target)) return;
 		tutupModalInfo();
-	} else if (rule === "edit-data-produk" && target !== undefined) {
-		editDataProduk(target);
+	} else if (rule === "pilih-edit-data-produk" && target !== undefined) {
+		Produk.editProduk(target);
 		tutupModalInfo();
 	} else if (rule === "print-struk-belanja") {
 	  const hasil = await Transaksi.printStrukBelanja();
@@ -59,31 +74,42 @@ async function aksiModal(rule, target) {
 	}
 }
 
-// fungsi tutuo modal info
+// fungsi tutup modal info
 function tutupModalInfo() {
 	const modalEl = document.querySelector(".modal-info");
 	if (modalEl) {
 		modalEl.classList.remove("info-form");
 		modalEl.remove();
 	}
-	document.querySelector("#bukaFormProduk").style.display = "flex";
+	document.querySelector("body")?.classList.remove("overhide");
 }
 
-// event klik pada tombol oke
+// even klik tombol modal
 document.addEventListener("click", (e) => {
-	if (e.target.matches("[data-modal-oke")) {
+  e.preventDefault();
+  // tombol modal tutup
+	if (e.target.matches("[data-modal-batal]")) {
+		const rule = e.target.dataset.rule;
+		const target = e.target.dataset.target;
+		aksiModal(rule, null);
+	}
+  // tombol modal edit
+	if (e.target.matches("[data-modal-edit]")) {
 		const rule = e.target.dataset.rule;
 		const target = e.target.dataset.target;
 		aksiModal(rule, target);
 	}
-});
-
-// event klik pada tombol close
-document.addEventListener("click", (e) => {
-	if (e.target.matches("[data-modal-close")) {
+  // tombol modal hapus
+	if (e.target.matches("[data-modal-hapus]")) {
 		const rule = e.target.dataset.rule;
 		const target = e.target.dataset.target;
-		aksiModal(rule, null);
+		aksiModal(rule, target);
+	}
+  // tombol modal oke
+	if (e.target.matches("[data-modal-oke]")) {
+		const rule = e.target.dataset.rule;
+		const target = e.target.dataset.target;
+		aksiModal(rule, target);
 	}
 });
 
