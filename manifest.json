@@ -3,6 +3,7 @@
   "short_name": "App Kasir",
   "start_url": "/app-kasir/index.html",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#394150",
   "theme_color": "#394150",
   "icons": [
