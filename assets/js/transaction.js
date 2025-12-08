@@ -3,36 +3,39 @@ import { Sound } from './sound.js';
 import { Helpers } from './helpers.js';
 import { Printer } from './printer.js';
 
+// variabel global cart transaksi
+let cart = [];
+
 // fungsi hitung total
 function hitungTotal(target, jumlah, diskon) {
 	jumlah = jumlah.replace(",", ".");
 	diskon = diskon.replace(/\./g, "");
 	const subdis = diskon * jumlah;
 	const subtot = cart[target].hargaBarang * jumlah;
-	//const 
 	cart[target].jumlahBarang = jumlah;
 	cart[target].diskonHarga = diskon;
 	cart[target].subtotal = subtot;
 	cart[target].subdiskon = subdis;
 }
 
-// fungsi pilih produk hasil pencarian
-function pilihProduk(kode, rule) {
+// fungsi pilih produk hasil pencarian & hasil scan produk
+function pilihProduk(kode, rule, jumlah) {
+	  if (jumlah === "" || jumlah === "0") jumlah = validasiJumlahKosong();
 	const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
 	const produk = daftarProduk.find(p => p.kodeProduk === kode);
 	if (produk) {
 		const elNama = document.querySelector("#namaBarang");
 		const elHarga = document.querySelector("#hargaBarang");
 		const elJumlah = document.querySelector("#jumlahBarang");
-		document.querySelector(".hasil-pencarian").classList.remove("show");
+		const elDiskon = document.querySelector("#diskonHarga");
+		const elTotalHarga = document.querySelector("#totalHarga");
 		elNama.value = `${produk.namaProduk} ${produk.beratProduk}`;
 		elHarga.value = produk.hargaProduk;
 		if (rule !== "" || rule === "addpro") {
-			elJumlah.value = 1;
-			const namaBarang = document.querySelector("#namaBarang").value;
-			const hargaBarang = Number(document.querySelector("#hargaBarang").value.replace(/\./g, ""));
-			const jumlahBarang = Number(document.querySelector("#jumlahBarang").value.replace(",", "."));
-			const diskonHarga = Number(document.querySelector("#diskonHarga").value.replace(/\./, ""));
+			const namaBarang = elNama.value;
+			const hargaBarang = Number(elHarga.value.replace(/\D/g, ""));
+			const jumlahBarang = Number(jumlah.replace(",", "."));
+			const diskonHarga = Number(elDiskon.value.replace(/\D/g, ""));
 			const subtotal = hargaBarang * jumlahBarang;
 			const subdiskon = diskonHarga * jumlahBarang;
 			cart.push({
@@ -43,13 +46,15 @@ function pilihProduk(kode, rule) {
 				subtotal,
 				subdiskon
 			});
-			tampilkanStruk();
-			tampilkanKeranjang();
-			document.querySelector("#formStruk form").reset();
-			elNama.focus();
+			tutupHasilPencarian();
+			simpanTransaksiTerakhir(cart);
 			Sound.playBell();
+			document.querySelector("#formStruk form")?.reset();
 		} else {
-			elJumlah.focus();
+	    tutupHasilPencarian();
+			elDiskon.focus();
+			elJumlah.value = jumlah;
+			elTotalHarga.value = Helpers.formatRupiah(elHarga.value.replace(/\D/g, "") * jumlah.replace(",", "."));
 		}
 	} else {
 		const elNama = document.querySelector("#namaBarang");
@@ -60,28 +65,46 @@ function pilihProduk(kode, rule) {
 
 // fungsi pencarian live produk
 function liveSearchProduk(el) {
-	const hasilPencarian = document.querySelector(".hasil-pencarian");
+  document.querySelector("body")?.classList.add("overhide");
+	document.querySelector(".hasil-pencarian")?.classList.add("show");
 	const listProduk = document.querySelector("#hasilPencarian");
 	const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
 	const hasil = daftarProduk.filter(p => p.kodeProduk.toLowerCase().includes(el.value.toLowerCase()) || p.namaProduk.toLowerCase().includes(el.value.toLowerCase()));
-	hasilPencarian.classList.add("show");
-	listProduk.innerHTML = hasil.map(p => 
-	`
-		<li>
-			<span data-target-kode="${p.kodeProduk}" data-target-rule="" class="nama-produk">
-				${p.namaProduk} ${p.beratProduk}
-			</span>
-			<span data-target-kode="${p.kodeProduk}" data-target-rule="addpro" class="btn-plus">
-				<i class="fa-solid fa-plus"></i>
-			</span>
-		</li>
-	`).join("");
-	if (el.value.trim() === "") {
-		document.querySelector("#formStruk form").reset();
+	let rounded = "";
+	if (hasil.length === 0 || hasil.length === 1) {
+	  rounded = ' class="rounded"';
 	}
-	if (el.value.trim() === "" || hasil.length === 0) {
-		hasilPencarian.classList.remove("show");
-		listProduk.innerHTML = "";
+	if (hasil.length > 0) {
+  	listProduk.innerHTML = hasil.map(p => `
+  		<li${rounded}>
+  			<span data-target-jumlah="1" data-target-kode="${p.kodeProduk}" data-target-rule="" class="nama-produk">
+  				${p.namaProduk} ${p.beratProduk}
+  			</span>
+  			<span>
+  			  <input inputmode="numeric" value="1" class="jumpro">
+  			</span>
+  			<span data-target-jumlah="1" data-target-kode="${p.kodeProduk}" data-target-rule="addpro" class="btn-plus">
+  				<i class="fa-solid fa-check"></i>
+  			</span>
+  		</li>
+  	`).join("");
+  	validasiJumlahKosong();
+	} else {
+		tutupHasilPencarian();
+	}
+	const jumpro = document.querySelectorAll(".jumpro");
+	const jumlahTarget1 = document.querySelectorAll(".nama-produk");
+	const jumlahTarget2 = document.querySelectorAll(".btn-plus");
+	jumpro.forEach((input, i) => {
+	  input.addEventListener("input", () => {
+	    input.value = input.value.replace(/\./g, ",");
+	    jumlahTarget1[i].dataset.targetJumlah = input.value;
+	    jumlahTarget2[i].dataset.targetJumlah = input.value;
+	  });
+	});
+	if (el.value.trim() === "") {
+		tutupHasilPencarian();
+		document.querySelector("#formStruk form")?.reset();
 	}
 }
 
@@ -93,51 +116,17 @@ async function printStrukBelanja() {
   		bayar.focus();
   		return false;
   	}
-  	/*
-  	modalInfo({
-  		title: 'Proses Berhasil',
-  		body: 'Struk belanja berhasil diprint!',
-  		btn: { oke: { text: 'Oke' } }
-  	});
-  	*/
-  	//if (!Printer.cekKoneksiPrinter()) return;
-  	//alert('lanjut')
-  	
-  	//if (!Printer.printerCharacteristic) {
-    	//document.querySelector(".form-struk").classList.add("hidden");
-    	//alert("Printer belum terhubung!\n\nSilakan SCAN SERVICES => Hubungkan Printer.");
-    	/*
-    	return Modal.modalInfo({
-    		title: 'Hubungkan Printer',
-    		body: 'Hubungkan <b>App Kasir</b> dengan <b>Printer</b> (aktifkan Bluetooth &amp; Lokasi).',
-    		btn: {
-    			close: { text: 'Batal' },
-    			oke: {
-    				text: 'Hubungkan',
-    				rule: 'hubungkan-printer'
-    			}
-    		}
-    	});*/
-    //}
     
-    const toko = JSON.parse(localStorage.getItem("dataToko")) || [];
-      
-    //await Printer.printerCharacteristic.writeValue(new Uint8Array([0x1B, 0x40])); // reset printer
+    const struk = JSON.parse(localStorage.getItem("dataStruk")) || [];
     
-    await Printer.printStyled(`${toko.namaToko}`, 1, 0x12);
-    
+    await Printer.printStyled(`${struk.namaToko}`, 1, 0x12);
     await Printer.printLine("\n", 1);
-    
-    await Printer.printLine(`${toko.kontakToko}`, 1);
-    await Printer.printLine(`${toko.alamatToko}`, 1);
-    
+    await Printer.printLine(`${struk.kontakToko}`, 1);
+    await Printer.printLine(`${struk.alamatToko}`, 1);
     await Printer.printLine("--------------------------------");
-      
-    await Printer.printLine(Printer.lineLR("Kasir", `${toko.namaAdmin}`));
+    await Printer.printLine(Printer.lineLR("Kasir", `${struk.namaAdmin}`));
     await Printer.printLine(Printer.lineLR("Tanggal", Helpers.tanggalSekarang()));
-    
     await Printer.printLine("================================");
-  
   	for (const p of cart) {
   		await Printer.printLine(`${p.namaBarang}`);
       await Printer.printLine(Printer.lineLR(`${Helpers.formatRupiah(p.hargaBarang)} x ${p.jumlahBarang}`, Helpers.formatRupiah(p.subtotal)));
@@ -145,26 +134,19 @@ async function printStrukBelanja() {
       	await Printer.printLine(Printer.lineLR(`Diskon: ${Helpers.formatRupiah(p.diskonHarga)} x ${p.jumlahBarang}`, Helpers.formatRupiah(p.subdiskon)));
       }
   	}
-  		
   	await Printer.printLine("--------------------------------");
-  		
   	const printSubtotal = cart.reduce((a, b) => a + b.subtotal, 0);
   	const printDiskon = cart.reduce((a, b) => a + b.subdiskon, 0);
   	const printTotal = printSubtotal - printDiskon;
-  
     await Printer.printLine(Printer.lineLR("Subtotal", Helpers.formatRupiah(printSubtotal)));
     await Printer.printLine(Printer.lineLR("Total Diskon", Helpers.formatRupiah(printDiskon)));
     await Printer.printLine(Printer.lineLR("Total Belanja", Helpers.formatRupiah(printTotal)));
-  		
-  	const printBayar = document.querySelector("#nominalBayar")?.value;
+  	const printBayar = document.querySelector("#nominalBayar")?.value.replace(/\D/g, "");
   	const printKembali = document.querySelector("#kembalian")?.value;
-  	
     await Printer.printLine(Printer.lineLR("Dibayar", printBayar));
     await Printer.printLine(Printer.lineLR("Kembalian", printKembali));
-     
   	await Printer.printLine("================================");
-  	
-    const terimaKasih = toko.terimaKasih.split(",");
+    const terimaKasih = struk.terimaKasih.split(",");
     const terima = terimaKasih[0]?.trim() || "";
     const kasih = terimaKasih[1]?.trim() || "";
     if (kasih) {
@@ -174,30 +156,31 @@ async function printStrukBelanja() {
   		await Printer.printLine(`${terima}`, 1);
     }
     await Printer.printLine("\n\n", 1);
-    
   	Modal.modalInfo({
   	  title: 'Berhasil',
   	  body: 'Struk belanja berhasil dicetak!',
-  	  btn: { close: { text: 'Tutup' } }
+  	  btn: { batal: { text: 'Tutup' } }
   	});
-  	
   	resetKeranjangBelanja();
-  	
   	return true;
   } catch(err) {
     Modal.modalInfo({
       title: 'Gagal Diproses',
       body: `Gagal cetak struk: ${err}`,
-      btn: { close: { text: 'Tutup' } }
+      btn: { batal: { text: 'Tutup' } }
     })
   }
 }
 
 // fungsi reset keranjang belanja
 function resetKeranjangBelanja() {
-  cart.length = 0;
-  tampilkanStruk();
-  tampilkanKeranjang();
+  // putuskan hubungan tombol dengan form modal
+  	const btnPrint = document.querySelector("[data-modal-oke]");
+  	if (btnPrint) {
+    	btnPrint.removeAttribute("form");
+    	btnPrint.setAttribute("type", "button");
+  	}
+  hapusDataTransaksiTerakhir();
 }
 
 // fungsi edit keranjang
@@ -206,7 +189,7 @@ function editKeranjang(i) {
 		return Modal.modalInfo({
 			title: 'Terjadi Kesalahan',
 			body: 'Produk yang dipilih tidak valid!',
-			btn: { close: { text: 'Tutup' } }
+			btn: { batal: { text: 'Tutup' } }
 		});
 	}
 	const p = cart[i];
@@ -216,16 +199,16 @@ function editKeranjang(i) {
 			<form id="editKeranjang">
 				<div class="row">
 					<label>Jumlah Produk</label>
-					<input id="jumlah" inputmode="numeric" value="${p.jumlahBarang}">
+					<input id="jumlah" inputmode="numeric" value="${Helpers.formatRupiah(p.jumlahBarang)}" placeholder="0">
 				</div>
 				<div class="row">
 					<label>Diskon Harga</label>
-					<input id="diskon" inputmode="numeric" value="${p.diskonHarga}">
+					<input id="diskon" inputmode="numeric" value="${p.diskonHarga ? Helpers.formatRupiah(p.diskonHarga) : ""}" placeholder="0">
 				</div>
 			</form>
 		`,
 		btn: {
-			close: { text: 'Batal' },
+			batal: { text: 'Batal' },
 			oke: {
 				text: '<i class="fa-solid fa-save"></i> Simpan',
 				rule: 'edit-data-keranjang',
@@ -233,9 +216,12 @@ function editKeranjang(i) {
 			}
 		}
 	});
-	document.querySelector(".modal-info").classList.add("info-form");
+	setTimeout(() => {document.querySelector(".modal-info")?.classList.add("info-form")},0);
 	const jumlah = document.querySelector("#editKeranjang #jumlah");
 	const diskon = document.querySelector("#editKeranjang #diskon");
+	const len = jumlah.value.length;
+	jumlah.setSelectionRange(len, len);
+	jumlah.focus();
 	jumlah.addEventListener("input", () => {
 		jumlah.value = jumlah.value.replace(".", ",");
 	});
@@ -245,14 +231,15 @@ function editKeranjang(i) {
 }
 
 // fungsi hapus keranjang
-function hapusKeranjang(i, nama) {
+function hapusKeranjang(i) {
+  const nama = cart[i].namaBarang;
 	Modal.modalInfo({
 		title: 'Konfirmasi',
 		body: `Hapus produk <b>${nama}</b>?`,
 		btn: {
-			close: { text: 'Batal' },
-			oke: {
-				text: 'Hapus',
+			batal: { text: 'Batal' },
+			hapus: {
+				text: 'Ya, hapus',
 				rule: 'hapus-data-keranjang',
 				target: i
 			}
@@ -260,9 +247,31 @@ function hapusKeranjang(i, nama) {
 	});
 }
 
+// fungsi modal edit, hapus keranjang
+function pilihanEditHapusKeranjang(i, nama) {
+	Modal.modalInfo({
+		title: 'Konfirmasi',
+		body: `Produk <b>${nama}</b>`,
+		btn: {
+			batal: { text: 'Batal' },
+			edit: {
+			  text: 'Edit',
+			  rule: 'pilih-edit-data-keranjang',
+			  target: i
+			},
+			oke: {
+				text: 'Hapus',
+				rule: 'pilih-hapus-data-keranjang',
+				target: i
+			}
+		}
+	});
+}
+
 // fungsi tampilkan keranjang 
-const tabelKeranjang = document.querySelector("#tabelKeranjang tbody");
 function tampilkanKeranjang() {
+  const tabelKeranjang = document.querySelector("#tabelKeranjang tbody");
+  const transaksiTerakhir = localStorage.getItem("transaksiTerakhir");
 	tabelKeranjang.innerHTML = "";
 	if (cart.length > 0) {
 		cart.forEach((p, i) => {
@@ -270,24 +279,27 @@ function tampilkanKeranjang() {
   			<tr>
   				<td>${i + 1}</td>
   				<td>${p.namaBarang}</td>
-  				<td>${p.jumlahBarang.toString().replace(".", ",")} x ${Helpers.formatRupiah(p.hargaBarang)} = ${Helpers.formatRupiah(p.subtotal)}</td>
+  				<td>${p.jumlahBarang.toString().replace(".", ",")}</td>
+  				<td>x</td>
+  				<td>${Helpers.formatRupiah(p.hargaBarang)}</td>
+  				<td>=</td>
+  				<td>${Helpers.formatRupiah(p.subtotal)}</td>
   				<td>
-  					<button data-edit-keranjang="${i}" data-nama-barang-keranjang="${p.namaBarang}" type="button" title="Edit">
-  						<i class="fa-solid fa-pencil"></i>
-  					</button>
-  					<button data-hapus-keranjang="${i}" data-nama-barang-keranjang="${p.namaBarang}" type="button" title="Hapus">
-  						<i class="fa-solid fa-trash"></i>
+  					<button data-pilihan-edit-hapus-keranjang="${i}" data-nama-barang-keranjang="${p.namaBarang}" type="button" title="Pilihan">
+  						<i class="fa-solid fa-ellipsis-vertical"></i>
   					</button>
   				</td>
   			</tr>
 			`;
 		});
 	} else {
-		tabelKeranjang.innerHTML = `
-			<tr>
-				<td class="no-krj">Belum Ada Transaksi di Daftar Belanja</td>
-			</tr>
-		`;
+	  setTimeout(() => {
+  		tabelKeranjang.innerHTML = `
+  			<tr class="no-krj">
+  				<td>Belum ada transaksi yang tersedia!</td>
+  			</tr>
+  		`;
+	  }, 500);
 	}
 }
 
@@ -297,24 +309,18 @@ function hapusDataKeranjang(target) {
 		return Modal.modalInfo({
 			title: "Proses Error",
 			body: "Produk tidak valid!",
-			btn: { close: { text: "Tutup" } }
+			btn: { batal: { text: "Tutup" } }
 		});
 	}
 	const [dihapus] = cart.splice(target, 1);
-	if (dihapus) {/*
-		modalInfo({
-			title: "Proses Sukses",
-			body: "Produk berhasil dihapus!",
-			btn: { oke: { text: "Oke" } }
-		});*/
-		tampilkanStruk();
-		tampilkanKeranjang();
+	if (dihapus) {
+		simpanTransaksiTerakhir(cart);
 		Sound.playDelete();
 	} else {
 		Modal.modalInfo({
 			title: "Proses Gagal",
 			body: "Produk gagal dihapus coba lagi!",
-			btn: { close: { text: "Tutup" } }
+			btn: { batal: { text: "Tutup" } }
 		});
 	}
 }
@@ -330,13 +336,13 @@ function editDataKeranjang(target) {
 		return false;
 	}
 	hitungTotal(target, jumlah, diskon);
-	tampilkanStruk();
-	tampilkanKeranjang();/*
-	Modal.modalInfo({
-		body: 'Perubahan berhasil disimpan!',
-		btn: { close: { text: 'Tutup' } }
-	});*/
+	simpanTransaksiTerakhir(cart);
 	Sound.playUpdate();
+	Modal.modalInfo({
+	  title: 'Berhasil',
+		body: 'Perubahan berhasil disimpan!',
+		btn: { batal: { text: 'Tutup' } }
+	});
 	return true;
 }
 
@@ -346,16 +352,19 @@ function lihatStruk() {
     return Modal.modalInfo({
       title: 'Transaksi Kosong',
       body: 'Belum ada transaksi untuk dilihat!',
-      btn: { close: { text: 'Tutup' } }
+      btn: { batal: { text: 'Tutup' } }
     });
   }
-	const tutup = document.getElementById("tutup");
+  const body = document.querySelector("body");
+	const tutup = document.querySelector("#tutup");
 	const preview = document.querySelector(".box-prev");
-	preview.classList.toggle("full");
-	tutup.classList.toggle("show");
+	body.classList.add("overhide");
+	preview.classList.add("full");
+	tutup.classList.add("show");
 	tutup.onclick = () => {
-		preview.classList.toggle("full");
-		tutup.classList.toggle("show");
+	  body.classList.remove("overhide");
+		preview.classList.remove("full");
+		tutup.classList.remove("show");
 	}
 }
 
@@ -388,7 +397,7 @@ function tampilkanStruk() {
 		document.querySelector(".el-total").textContent = Helpers.formatRupiah(elTotal);
 	} else {
 		listProduk.innerHTML = `
-		  <div style="padding:4px;text-align:center;color:#aaa;font-weight:bold">Struk Belanja</div>
+		  <div class="no-list">Struk Belanja</div>
 		`;
 		document.querySelector(".el-subtotal").textContent = "0";
 		document.querySelector(".el-diskon").textContent = "0";
@@ -396,27 +405,14 @@ function tampilkanStruk() {
 	}
 }
 
-// hapus produk dari array cart dan perbarui tampilan struk
-document.querySelector(".produk")?.addEventListener("click", (e) => {
-	const item = e.target.closest(".item");
-  if (!item) return;
-  const idx = Number(item.getAttribute("target-data"));
-  const nama = item.querySelector(".n-produk").textContent;
-  if (!confirm(`Hapus ${nama}?`)) return;
-  cart.splice(idx, 1);
-  tampilkanStruk();
-  tampilkanKeranjang();
-  Sound.playBell();
-});
-
 // fungsi input transaksi
-let cart = [];
-
 function inputTransaksi(e) {
 	e.preventDefault();
 	const inputNamaBarang = document.querySelector("#namaBarang");
 	const inputHargaBarang = document.querySelector("#hargaBarang");
 	const inputJumlahBarang = document.querySelector("#jumlahBarang");
+	const inputDiskonHarga = document.querySelector("#diskonHarga");
+	
 	if (inputNamaBarang.value.trim() === "") {
 		inputNamaBarang.focus();
 		return;
@@ -429,14 +425,15 @@ function inputTransaksi(e) {
 		inputJumlahBarang.focus();
 		return;
 	}
-	const namaBarang = document.querySelector("#namaBarang").value;
-	const hargaBarang = Number(document.querySelector("#hargaBarang").value.replace(/\./g, ""));
-	const jumlahBarang = Number(document.querySelector("#jumlahBarang").value.replace(",", "."));
-	const diskonHarga = Number(document.querySelector("#diskonHarga").value.replace(/\./, ""));
 	
+	const namaBarang = inputNamaBarang.value;
+	const hargaBarang = Number(inputHargaBarang.value.replace(/\./g, ""));
+	const jumlahBarang = Number(inputJumlahBarang.value.replace(",", "."));
+	const diskonHarga = Number(inputDiskonHarga.value.replace(/\./, ""));
+	// hitung subtotal
 	const subtotal = hargaBarang * jumlahBarang;
 	const subdiskon = diskonHarga * jumlahBarang;
-	
+	// simpan ke keranjang
 	cart.push({
 		namaBarang,
 		hargaBarang,
@@ -445,12 +442,173 @@ function inputTransaksi(e) {
 		subtotal,
 		subdiskon
 	});
-	
-	tampilkanStruk();
-	tampilkanKeranjang();
-	document.querySelector("#formStruk form").reset();
+	simpanTransaksiTerakhir(cart);
 	inputNamaBarang.focus();
 	Sound.playBell();
+	document.querySelector("#formStruk form")?.reset();
+}
+
+// fungsi modal pembayaran
+function modalPembayaran() {
+  Modal.modalInfo({
+		title: 'Form Pembayaran',
+		body: `
+			<form id="formPembayaran">
+				<div class="row">
+					<label>Nominal Bayar</label>
+					<input id="nominalBayar" inputmode="numeric">
+				</div>
+				<div class="row">
+					<label>Total Belanja</label>
+					<input id="totalBelanja" inputmode="numeric" placeholder="0" readonly>
+				</div>
+				<div class="row">
+					<label>Kembalian</label>
+					<input id="kembalian" inputmode="numeric" placeholder="0" readonly>
+				</div>
+			</form>
+		`,
+		btn: {
+			batal: { text: "Batal" },
+			oke: {
+				text: `<i class="fa-solid fa-print"></i> Print`,
+				rule: 'print-struk-belanja'
+			}
+		}
+	});
+	// hubungkan tombol dengan form modal
+	const btnPrint = document.querySelector("[data-modal-oke]");
+	if (btnPrint) {
+  	btnPrint.setAttribute("form", "formPembayaran");
+  	btnPrint.setAttribute("type", "submit");
+	}
+	// set kolom input
+	const pembayaran = document.querySelector("#nominalBayar");
+  const totalBelanja = document.querySelector("#totalBelanja");
+  const sisaUang = document.querySelector("#kembalian");
+  const subtotal = cart.reduce((a, b) => a + b.subtotal, 0);
+  const subdiskon = cart.reduce((a, b) => a + b.subdiskon, 0);
+  const total = subtotal - subdiskon;
+  // hapus listener lama biar tidak dobel-dobel
+  pembayaran?.replaceWith(pembayaran.cloneNode(true));
+  const bayarInput = document.querySelector("#nominalBayar");
+  totalBelanja.value = Helpers.formatRupiah(total);
+  bayarInput?.focus();
+  bayarInput?.addEventListener("input", () => {
+  	// ambil angka saja
+    const angkaBayar = Number(bayarInput?.value.replace(/\D/g, ""));
+    // hitung kembalian
+    const kmb = angkaBayar - total;
+    if (bayarInput.value === "") { bayarInput.value = ""; sisaUang.value = "0"; return; }
+    // tampilkan format Rupiah di input pembayaran
+    bayarInput.value = Helpers.formatRupiah(angkaBayar);
+    // tampilkan kembalian ke layar (format rupiah)
+    sisaUang.value = Helpers.formatRupiah(kmb);
+  });
+}
+
+// fungsi validasi jumlah kosong
+function validasiJumlahKosong() {
+  const jumpro = document.querySelectorAll(".jumpro");
+  let jumlah = "";
+	jumpro?.forEach(el => {
+	  el.addEventListener("blur", () => {
+	    if (el.value.trim() === "" || el.value.trim() === "0") {
+	      el.value = "1";
+	    }
+	  });
+    if (el.value.trim() !== "" || el.value.trim() === "0") {
+      jumlah = "1";
+    }
+	});
+	return jumlah;
+}
+
+// fungsi tutup hasil pencarian
+function tutupHasilPencarian(rule) {
+  document.querySelector("body")?.classList.remove("overhide");
+  document.querySelector(".hasil-pencarian")?.classList.remove("show");
+  document.querySelector("#hasilPencarian").innerHTML = "";
+  if (rule !== undefined && rule === "clicked") document.querySelector("#formStruk form")?.reset();
+  document.querySelector("#formStruk form #namaBarang")?.focus();
+}
+
+// fungsi simpan transaksi terakhir
+function simpanTransaksiTerakhir(dataTransaksi) {
+  localStorage.setItem("transaksiTerakhir", JSON.stringify(dataTransaksi));
+  tampilkanStruk();
+  tampilkanKeranjang();
+}
+
+// fungsi tampilkan transaksi terakhir
+function tampilkanTransaksiTerakhir() {
+  const saved = localStorage.getItem("transaksiTerakhir");
+  if (saved) {
+    const dataTransaksi = JSON.parse(saved);
+    cart = dataTransaksi;
+  }
+  tampilkanStruk();
+  tampilkanKeranjang();
+}
+
+// fungsi hapus transaksi terakhir
+function hapusTransaksiTerakhir() {
+  if (cart.length === 0) {
+    return Modal.modalInfo({
+      title: 'Transaksi Kosong',
+      body: 'Belum ada transaksi untuk hapus!',
+      btn: { batal: { text: 'Tutup' } }
+    });
+  }
+  Modal.modalInfo({
+    title: 'Konfirmasi',
+    body: 'Hapus transaksi terakhir?',
+    btn: {
+      batal: { text: 'Batal' },
+      hapus: {
+        text: 'Hapus',
+        rule: 'hapus-data-transaksi-terakhir',
+        target: 'clicked'
+      }
+    }
+  });
+}
+
+// fungsi hapus datq transaksi terakhir
+function hapusDataTransaksiTerakhir(target) {
+  localStorage.removeItem("transaksiTerakhir");
+  cart.length = 0;
+  if (target === "clicked") {
+    const transaksiTerakhir = tampilkanTransaksiTerakhir();
+    if (transaksiTerakhir === undefined) {
+      Modal.modalInfo({
+        title: 'Berhasil',
+        body: 'Transaksi berhasil dihapus!',
+        btn: { batal: { text: 'Tutup' } }
+      });
+    } else {
+      Modal.modalInfo({
+        title: 'Gagal',
+        body: 'Transaksi gagal dihapus, coba lagi!',
+        btn: { batal: { text: 'Tutup' } }
+      });
+    }
+  }
+  tampilkanStruk();
+  tampilkanKeranjang();
+  Sound.playDelete();
+}
+
+// fungsi cek data keranjang sebelum proseb pembayaran
+function cekDataKeranjang() {
+	if (cart.length === 0) {
+		return Modal.modalInfo({
+			title: 'Transaksi Kosong',
+			body: 'Belum ada transaksi untuk diproses!',
+			btn: { batal: { text: 'Tutup' } }
+		});
+	}
+	return true;
 }
 
 export const Transaksi =  {
@@ -464,5 +622,12 @@ export const Transaksi =  {
 	hapusKeranjang,
 	editDataKeranjang,
 	hapusDataKeranjang,
-	lihatStruk
+	lihatStruk,
+	modalPembayaran,
+	tutupHasilPencarian,
+	pilihanEditHapusKeranjang,
+	hapusTransaksiTerakhir,
+	hapusDataTransaksiTerakhir,
+	tampilkanTransaksiTerakhir,
+	cekDataKeranjang
 };

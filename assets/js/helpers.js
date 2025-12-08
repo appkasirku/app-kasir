@@ -1,3 +1,5 @@
+import { Transaksi } from './transaction.js';
+
 // fungsi tanggal sekarang
 function tanggalSekarang(date = new Date()) {
 	const bulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
@@ -91,18 +93,49 @@ function kalkulasiHarga() {
 	
 	inputHarga.value = formatRupiah(inputHarga.value.trim().replace(/\D/g, ""));
 	
+	let h = inputHarga.value;
+	if (h.trim() === "0") {
+	 inputTotalHarga.value = "";
+	  if (inputJumlah.value === "0") {
+	    inputJumlah.value = "";
+	  }
+	  if (inputDiskon.value === "0") {
+	    inputDiskon.value = "";
+	  }
+	  if (inputTotalDiskon.value === "0") {
+	    inputTotalDiskon.value = "";
+	  }
+	  return;
+	}
+	
+	// input jumlah barang
   let v = inputJumlah.value;
-  // 1. Jika kosong → jadi 0
+  // jika kosong -> jadi 0
   if (v.trim() === "") {
+    inputJumlah.value = "0";
+    inputTotalHarga.value = inputHarga.value;
+    if (inputDiskon.value === "0") {
+      inputDiskon.value = "";
+    }
+    inputTotalDiskon.value = "";
+    return;
+  }
+  // jika 00 -> jadi 0
+  if (v.trim() === "00") {
     inputJumlah.value = "0";
     return;
   }
-  // 2. Jika user sudah ketik angka selain 0 → hilangkan leading zero
-  // contoh: "01" → "1"
+  // jika , -> jadi 0,
+  if (v.trim() === ",") {
+    inputJumlah.value = "0,";
+    return;
+  }
+  // jika user sudah ketik angka selain 0 -> hilangkan leading zero
+  // contoh: "01" -> "1"
   if (/^[0]+[1-9]/.test(v)) {
   	v = v.replace(/^0+/, ""); 
   }
-  // 3. Jika user mengetik titik → ubah jadi koma
+  // jika user mengetik titik -> ubah jadi koma
   v = v.replace(/\./g, ",");
   // Simpan perubahan
   inputJumlah.value = v.replace(/\s/g, "");
@@ -112,10 +145,9 @@ function kalkulasiHarga() {
 	const harga = Number(inputHarga.value.replace(/\D/g, ""));
 	const jumlah = inputJumlah.value.replace(",", ".");
 	const diskon = Number(inputDiskon.value.replace(/\D/g, ""));
-	const totalHarga = formatRupiah(harga * jumlah);
-	const totalDiskon = formatRupiah(diskon * jumlah);
-	inputTotalHarga.value = totalHarga;
-	inputTotalDiskon.value = totalDiskon;
+	
+	inputTotalHarga.value = formatRupiah(harga * jumlah);
+	inputTotalDiskon.value = formatRupiah(diskon * jumlah);
 }
 
 // fungsi bersihkan elemen html
@@ -123,6 +155,18 @@ function stripHTML(text) {
 	const div = document.createElement("div");
 	div.innerHTML = text;
 	return div.textContent || "";
+}
+
+// fungsi reload otomatis saat aplikasi dibuka kembali
+function firstRelodingDataApp() {
+  const nav = performance.getEntriesByType("navigation")[0];
+  // Cek apakah ini reload otomatis sebelumnya
+  const already = sessionStorage.getItem("autoReloadDone");
+  // Jika halaman dibuka ulang (navigate) dan belum pernah auto-reload
+  if (nav.type !== "reload" && !already) {
+    sessionStorage.setItem("autoReloadDone", "yes");
+    window.location.reload();
+  }
 }
 
 export const Helpers = {
@@ -136,5 +180,6 @@ export const Helpers = {
 	formatRupiah,
 	inputFormatHarga,
 	kalkulasiHarga,
-	stripHTML
+	stripHTML,
+	firstRelodingDataApp
 };

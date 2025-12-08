@@ -31,7 +31,7 @@ function editProduk(kode) {
     return Modal.modalInfo({
     	title: 'Produk Tidak Valid',
     	body: `Produk dengan kode <b>${kode}</b> tidak tersedia!`,
-    	btn: { close: { text: 'Tutup' } }
+    	btn: { batal: { text: 'Tutup' } }
     });
   }
   // Masukkan data ke form input
@@ -53,16 +53,16 @@ function hapusProduk(kode) {
 		return Modal.modalInfo({
 			title: 'Gagal Dihapus',
 			body: `Produk dengan kode <b>${kode}</b> tidak tersedia!`,
-			btn: { close: { text: 'Tutup' } }
+			btn: { batal: { text: 'Tutup' } }
 		});
 	}
-	return Modal.modalInfo({
+  Modal.modalInfo({
 		title: 'Konfirmasi',
-		body: `Produk ${kode ? `<b>${produk.namaProduk}</b>` : '<b>tanpa kode</b>'} akan dihapus dari daftar.`,
+		body: `Hapus produk <b>${produk.namaProduk} ${produk.beratProduk}</b>?`,
 		btn: {
-			close: { text: 'Batal' },
-			oke: {
-				text: 'Hapus',
+			batal: { text: 'Batal' },
+			hapus: {
+				text: 'Ya, hapus',
 				rule: 'hapus-data-produk',
 				target: kode
 			}
@@ -79,7 +79,7 @@ function hapusDataProduk(kode) {
 		return Modal.modalInfo({
 			title: 'Gagal Diproses!',
 			body: `Produk ${produk.namaProduk} gagal dihapus!`,
-			btn: { close: { text: 'Tutup' } }
+			btn: { batal: { text: 'Tutup' } }
 		});
 	}
 	daftarProduk.splice(index, 1);
@@ -88,9 +88,40 @@ function hapusDataProduk(kode) {
 	Modal.modalInfo({
 		title: 'Proses Berhasil',
 		body: `${produk.namaProduk ? `<b>${produk.namaProduk}</b> berhasil dihapus dari daftar produk!` : 'Produk berhasil dihapus!'}`,
-		btn: { close: { text: 'Tutup' } }
+		btn: { batal: { text: 'Tutup' } }
 	});
 	Sound.playDelete();
+}
+
+// fungsi pilih edit, hapus data produk
+function pilihanEditHapusProduk(kode) {
+  const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];
+  // Cari produk berdasarkan kode
+  const produk = daftarProduk.find(p => p.kodeProduk === kode);
+  if (!produk) {
+    return Modal.modalInfo({
+    	title: 'Produk Tidak Valid',
+    	body: `Produk dengan kode <b>${kode}</b> tidak tersedia!`,
+    	btn: { batal: { text: 'Tutup' } }
+    });
+  }
+  Modal.modalInfo({
+    title: 'Konfirmasi',
+    body: `Produk <b>${produk.namaProduk} ${produk.beratProduk}</b>`,
+    btn: {
+      batal: { text: 'Batal' },
+      edit: {
+        text: 'Edit',
+        rule: 'pilih-edit-data-produk',
+        target: kode
+      },
+      oke: {
+        text: 'Hapus',
+        rule: 'pilih-hapus-data-produk',
+        target: kode
+      }
+    }
+  });
 }
 
 // fungsi tampilkan daftar produk
@@ -99,24 +130,24 @@ function tampilkanDaftarProduk() {
 	const tampilkanDaftarProduk = document.querySelector("#tampilkanDaftarProduk");
 	tampilkanDaftarProduk.innerHTML = "";
 	if (daftarProduk !== null && daftarProduk.length > 0) {
-		daftarProduk.slice().reverse().forEach((p) => {
+		daftarProduk.slice().reverse().forEach((p, i) => {
 			tampilkanDaftarProduk.innerHTML += `
-			<li>
-				<div class="flex">
-					<div>
-						<span class="kdp">${p.kodeProduk}</span>
-						<span class="ktp">${p.namaProduk} ${p.beratProduk}, Rp ${p.hargaProduk}</span>
-					</div>
-					<div class="btn-action">
-						<button data-edit="${p.kodeProduk}" type="button" title="Edit" class="btn-edit">
-							<i class="fa-solid fa-edit"></i>
-						</button>
-						<button data-hapus="${p.kodeProduk}" type="button" title="Hapus" class="btn-hapus">
-							<i class="fa-solid fa-trash"></i>
-						</button>
-					</div>
-				</div>
-			</li>
+  			<li>
+  				<div class="flex">
+  				  <div class="number">
+  				    <span>${i + 1}</span>
+  				  </div>
+  					<div class="produk">
+  						<span class="kdp">${p.kodeProduk}</span> &gt;
+  						<span class="ktp">${p.namaProduk} ${p.beratProduk} &gt; Rp ${p.hargaProduk}</span>
+  					</div>
+  					<div class="btn-action">
+  						<button data-pilihan-edit-hapus-produk="${p.kodeProduk}" type="button" title="Hapus">
+  							<i class="fa-solid fa-ellipsis-vertical"></i>
+  						</button>
+  					</div>
+  				</div>
+  			</li>
 			`;
 		});
 	} else {
@@ -194,12 +225,14 @@ function simpanFormProduk(e) {
 
 // fungsi buka form produk
 function bukaFormProduk() {
+	document.querySelector("body").classList.add("overhide");
 	document.querySelector(".input-produk").classList.add("show");
 	tampilkanDaftarProduk();
 }
 
 // fungsi tutup form produk
 function tutupFormProduk() {
+	document.querySelector("body").classList.remove("overhide");
 	document.querySelector(".input-produk").classList.remove("show");
 	const formProduk = document.querySelector("#formProduk");
 	if (!formProduk) return;
@@ -207,11 +240,12 @@ function tutupFormProduk() {
 }
 
 export const Produk = {
+	bukaFormProduk,
+	tutupFormProduk,
 	editProduk,
 	hapusProduk,
 	hapusDataProduk,
-	bukaFormProduk,
 	simpanFormProduk,
-	tutupFormProduk,
 	validasiInputProduk,
+	pilihanEditHapusProduk
 };
