@@ -62,6 +62,9 @@ async function aksiModal(rule, target) {
 	} else if (rule === "pilih-edit-data-produk" && target !== undefined) {
 		Produk.editProduk(target);
 		tutupModalInfo();
+	} else if (rule === 'ubah-kode-produk') {
+	  Produk.ubahKodeProduk();
+	  tutupModalInfo();
 	} else if (rule === "print-struk-belanja") {
 	  const hasil = await Transaksi.printStrukBelanja();
 		if (!hasil) return;

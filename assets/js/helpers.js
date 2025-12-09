@@ -32,7 +32,7 @@ function autoSpasiAngka(el) {
 // fungsi hapus ukuran/berat produk dari nama produk
 function bersihkanUkuran(text) {
 	return text.replace(
-		/\b\d+\s*(kg|kilo|g|gram|mg|ton|ml|ltr|lt|liter|pcs|pack|bungkus|ons|lb)\b/gi,
+		/\b\d+\s*(kg|kilo|gr|g|gram|mg|ton|ml|ltr|lt|liter|pcs|pack|bungkus|ons|lb)\b/gi,
 		""
 	).replace(/\s+/g, " ");
 }
