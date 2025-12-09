@@ -123,6 +123,7 @@ button:hover {
 	padding: 0;
 	display: flex;
 	justify-content: space-between;
+	position: relative!important;
 }
 .form-struk form label {
 	font-size: 12px;
@@ -663,12 +664,12 @@ button:hover {
   padding-right: 0;
 }
 .keranjang tr.no-krj {
-	height: 39dvh!important;
+	height: 42dvh!important;
 	background: #394150!important;
 }
 .keranjang tr.no-krj td {
 	width: 100%!important;
-  height: 39dvh!important;
+  height: 42dvh!important;
 	vertical-align: middle!important;
 	font-size: 14px!important;
 	color: #999!important;
@@ -827,7 +828,7 @@ button:hover {
 	color: #394150;
 	width: calc(100% - 6px);
 	max-width: 480px;
-	max-height: 52.5dvh;
+	max-height: 52.35dvh;
 	margin: auto;
 	border-radius: 0 0 6px 6px;
 	padding: 0;
@@ -1074,6 +1075,31 @@ button:hover {
 .hasil-pencarian ul li span.btn-plus:hover {
 	background: #394150;
 	color: #fff;
+}
+
+.app-install {
+  width: calc(100% - 6px);
+  max-width: 480px;
+  height: 0;
+  position: fixed;
+  bottom: 80px;
+  z-index: 999;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+}
+.app-install button {
+  background: #39415099;
+  color: white;
+  padding: 0 10px;
+  margin: 0;
+  height: 40px;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
 
 /*** mobile ***/

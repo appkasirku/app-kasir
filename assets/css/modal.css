@@ -30,6 +30,9 @@
 	font-size: 14px;
 	line-height: 22px;
 }
+.modal-info .modal-body div {
+	position: relative;
+}
 .modal-info .modal-body p {
 	margin-bottom: 10px;
 }
