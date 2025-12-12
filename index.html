@@ -24,7 +24,19 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-
+  
+  <!-- Splash Screen -->
+  <div id="splashScreen" class="splash">
+    <div class="splash-box">
+      <img src="assets/icon/icon-512.png" width="80">
+      <p>Memuat Aplikasi Kasir...</p>
+    </div>
+  </div>
+  <!-- Offline Bar -->
+  <div id="offlineBar" class="offline-bar">
+    ⚠️ Koneksi terputus – Mode Offline Aktif
+  </div>
+  
 	<div id="formStruk" class="form-struk">
 		<div class="boxer">
 		
@@ -84,6 +96,7 @@
 							<i class="fa-solid fa-times"></i>
 						</button>
 					</div>
+					
 				</div>
 				
 				<div class="box-form">
@@ -94,7 +107,10 @@
     			</div>
 					<div class="row">
 						<label>Nama / Merek</label>
-						<input id="namaBarang" type="search" placeholder="Kode / nama barang">
+						<input id="namaBarang" type="text" placeholder="Kode / nama produk">
+						<button id="btnInputNamaProduk" type="button">
+						  <i class="fas fa-times"></i>
+						</button>
 						<div class="hasil-pencarian">
 						  <div class="box-hasil">
   						  <button id="tutupHasilPencarian" type="button" title="Tutup">
@@ -285,24 +301,28 @@
 			<p>Cetak/Print struk belanja <i class="fa-solid fa-angle-down"></i> <br>hubungkan <b>App Kasir</b> <i class="fa-solid fa-angle-right"></i> <b>Printer <br>Thermal Bluetooth</b> Anda <i class="fa-solid fa-angle-right"></i> klik <br><b><i class="fa-solid fa-search"></i> Cari &amp; Hubungkan</b> <i class="fa-solid fa-angle-up"></i></p>
 		</div>
 	</div>
-
+	
 	<div class="app-install">
-	  <button id="btnInstallApp">
-      Install App Kasir
+	  <button id="btnInstallApp" data-mode="install">
+      Install Aplikasi
     </button>
 	</div>
+	
+  <div id="installLoader" class="install-loader hidden">
+    <div class="spinner"></div>
+    <p>Menginstall aplikasi...</p>
+  </div>
 
 	<audio id="soundBeep" src="/app-kasir/assets/sound/beep.mp3" preload="auto"></audio>
 	<audio id="soundSave" src="/app-kasir/assets/sound/save.mp3" preload="auto"></audio>
 	<audio id="soundUpdate" src="/app-kasir/assets/sound/update.mp3" preload="auto"></audio>
 	<audio id="soundDelete" src="/app-kasir/assets/sound/delete.mp3" preload="auto"></audio>
-
+	
 	<script type="module" src="/app-kasir/assets/js/install.js"></script>
 	<script type="module">
 		import { Register } from "/app-kasir/assets/js/sw-register.js";
 		window.addEventListener("load", Register.setServiceWorker);
 	</script>
-	
 	<script src="https://unpkg.com/html5-qrcode"></script>
 	<script type="module" src="/app-kasir/assets/js/app.js"></script>
 	
