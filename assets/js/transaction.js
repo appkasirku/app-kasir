@@ -1,3 +1,4 @@
+import { Install } from './install.js';
 import { Modal } from './modal.js';
 import { Sound } from './sound.js';
 import { Helpers } from './helpers.js';
@@ -65,6 +66,7 @@ function pilihProduk(kode, rule, jumlah) {
 
 // fungsi pencarian live produk
 function liveSearchProduk(el) {
+	showButtonInputNamaProduk();
   document.querySelector("body")?.classList.add("overhide");
 	document.querySelector(".hasil-pencarian")?.classList.add("show");
 	const listProduk = document.querySelector("#hasilPencarian");
@@ -75,6 +77,7 @@ function liveSearchProduk(el) {
 	  rounded = ' class="rounded"';
 	}
 	if (hasil.length > 0) {
+	  hideButtonInputNamaProduk();
   	listProduk.innerHTML = hasil.map(p => `
   		<li${rounded}>
   			<span data-target-jumlah="1" data-target-kode="${p.kodeProduk}" data-target-rule="" class="nama-produk">
@@ -96,6 +99,7 @@ function liveSearchProduk(el) {
 	const jumlahTarget1 = document.querySelectorAll(".nama-produk");
 	const jumlahTarget2 = document.querySelectorAll(".btn-plus");
 	jumpro.forEach((input, i) => {
+	  input.addEventListener("focus", () => input.select());
 	  input.addEventListener("input", () => {
 	    input.value = input.value.replace(/\./g, ",");
 	    jumlahTarget1[i].dataset.targetJumlah = input.value;
@@ -105,7 +109,35 @@ function liveSearchProduk(el) {
 	if (el.value.trim() === "") {
 		tutupHasilPencarian();
 		document.querySelector("#formStruk form")?.reset();
+		showButtonInputNamaProduk();
 	}
+}
+
+// fungsi show button input nama produk
+function showButtonInputNamaProduk() {
+  const btnInputNamaProduk = document.querySelector("#btnInputNamaProduk");
+  if (btnInputNamaProduk) {
+    btnInputNamaProduk.classList.add("show");
+    btnInputNamaProduk.addEventListener("click", clickButtonInputNamaProduk);
+  }
+}
+
+// klik tombol input nama produk
+function clickButtonInputNamaProduk() {
+  const inputs = document.querySelectorAll(".box-form input");
+  //const namaBarang = document.querySelector(".box-form #namaBarang");
+  inputs?.forEach((e) => {
+    e.value = "";
+  });
+  if (inputs[0]) {
+    inputs[0].value = "";
+    inputs[0].focus();
+  }
+}
+
+// fungsi hide button input nama produk
+function hideButtonInputNamaProduk() {
+  document.querySelector("#btnInputNamaProduk")?.classList.remove("show");
 }
 
 // fungsi print struk belanja
@@ -219,13 +251,13 @@ function editKeranjang(i) {
 	setTimeout(() => {document.querySelector(".modal-info")?.classList.add("info-form")},0);
 	const jumlah = document.querySelector("#editKeranjang #jumlah");
 	const diskon = document.querySelector("#editKeranjang #diskon");
-	const len = jumlah.value.length;
-	jumlah.setSelectionRange(len, len);
-	jumlah.focus();
-	jumlah.addEventListener("input", () => {
+	const len = jumlah?.value.length;
+	jumlah?.setSelectionRange(len, len);
+	jumlah?.focus();
+	jumlah?.addEventListener("input", () => {
 		jumlah.value = jumlah.value.replace(".", ",");
 	});
-	diskon.addEventListener("input", () => {
+	diskon?.addEventListener("input", () => {
 		diskon.value = Helpers.formatRupiah(diskon.value.replace(/\D/g, ""));
 	});
 }
@@ -331,8 +363,10 @@ function editDataKeranjang(target) {
 	const inputDiskon = document.querySelector("#editKeranjang #diskon");
 	const jumlah = inputJumlah.value;
 	const diskon = inputDiskon.value;
+	
 	if ((isNaN(parseInt(jumlah)) || parseInt(jumlah) <= 0)) {
 		setTimeout(() => inputJumlah.focus());
+		Install.toast('Masukkan jumlah produk', inputJumlah);
 		return false;
 	}
 	hitungTotal(target, jumlah, diskon);
@@ -415,14 +449,17 @@ function inputTransaksi(e) {
 	
 	if (inputNamaBarang.value.trim() === "") {
 		inputNamaBarang.focus();
+		Install.toast('Masukkan kode atau nama produk', inputNamaBarang);
 		return;
 	}
 	if (inputHargaBarang.value.trim() === "" || inputHargaBarang.value.trim() === "0") {
 		inputHargaBarang.focus();
+		Install.toast('Masukkan harga produk', inputHargaBarang);
 		return;
 	}
 	if (inputJumlahBarang.value.trim() === "" || inputJumlahBarang.value.trim() === "0") {
 		inputJumlahBarang.focus();
+		Install.toast('Masukkan jumlah produk', inputJumlahBarang);
 		return;
 	}
 	
@@ -476,6 +513,7 @@ function modalPembayaran() {
 			}
 		}
 	});
+	setTimeout(() => {document.querySelector(".modal-info")?.classList.add("info-form")},0);
 	// hubungkan tombol dengan form modal
 	const btnPrint = document.querySelector("[data-modal-oke]");
 	if (btnPrint) {
@@ -629,5 +667,7 @@ export const Transaksi =  {
 	hapusTransaksiTerakhir,
 	hapusDataTransaksiTerakhir,
 	tampilkanTransaksiTerakhir,
-	cekDataKeranjang
+	cekDataKeranjang,
+	showButtonInputNamaProduk,
+	hideButtonInputNamaProduk
 };

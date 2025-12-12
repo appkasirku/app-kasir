@@ -1,4 +1,5 @@
 // import semua fungsi yang dibutuhkan
+import { Install } from './install.js';
 import { Helpers } from './helpers.js';
 import { Struk } from './receipt.js';
 import { Scanner } from './scanner.js';
@@ -11,16 +12,6 @@ document.addEventListener("DOMContentLoaded", initApp);
 
 // fungsi utama initApp
 function initApp() {
-  
-  // cek instalasi aplikasi
-  const isStandalone =
-  window.matchMedia("(display-mode: standalone)").matches ||
-  window.navigator.standalone === true;
-  if (isStandalone) {
-    localStorage.setItem("appKasirInstalled", "yes");
-  } else {
-    localStorage.removeItem("appKasirInstalled");
-  }
   
   // reload otomatis saat aplikasi dibuka kembali
   Helpers.firstRelodingDataApp();
@@ -44,10 +35,26 @@ function initApp() {
   	});
   });
   
-  // pencarian produk form transaksi
+  // pencarian langsung form transaksi
   const namaBarangEl = document.querySelector("#namaBarang");
   namaBarangEl?.addEventListener("input", () => {
+    setTimeout(() => {
   	Transaksi.liveSearchProduk(namaBarangEl);
+    }, 150);
+  });
+  // munculkan tombol di input nama produk
+  namaBarangEl?.addEventListener("focus", () => {
+    Transaksi.showButtonInputNamaProduk();
+  });
+  // sembunyikan tombol di input nama produk saat blur sesuai kondisi
+  namaBarangEl?.addEventListener("blur", () => {
+    const closeSearch = document.querySelector(".hasil-pencarian");
+    const checkResult = closeSearch.classList.contains("show");
+    if (namaBarangEl.value.trim() === "" || checkResult) {
+      Transaksi.hideButtonInputNamaProduk();
+    } else {
+      Transaksi.showButtonInputNamaProduk();
+    }
   });
   
   // tombol tutup hasil pencarian produk form transaksi
@@ -68,11 +75,10 @@ function initApp() {
   
   // proses print transaksi
   document.querySelector("#prosesPrint")?.addEventListener("click", () => {
-    document.querySelector("body")?.classList.add("overhide");
-    // cek data keranjang sebelum diproses
-    if (!Transaksi.cekDataKeranjang()) return;
   	// cek koneksi printer sebelum proses pembayaran
   	if (!Printer.cekKoneksiPrinter()) return;
+    // cek data keranjang sebelum diproses
+    if (!Transaksi.cekDataKeranjang()) return;
   	// buka modal pembayaran
   	Transaksi.modalPembayaran();
   });
@@ -94,6 +100,13 @@ function initApp() {
   
   // tombol buka form produk
   document.querySelector("#bukaFormProduk")?.addEventListener("click", () => {
+    if (!Install.isAppInstalled()) {
+      let mode = "instal";
+      if (localStorage.getItem("appKasirInstalled") === "yes") {
+        mode = "buka";
+      }
+      return Install.toast(`Harap ${mode} aplikasi`, document.querySelector("#btnInstallApp"));
+    }
   	Produk.bukaFormProduk();
   	Produk.validasiInputProduk();
   });

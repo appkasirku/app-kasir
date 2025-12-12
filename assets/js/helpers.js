@@ -83,9 +83,9 @@ function kalkulasiHarga() {
 	inputNama.value = capitalizeWords(inputNama.value);
 	
 	if (inputNama.value.trim() === "") {
-		if (inputHarga.value.trim() === "0"
-		&& inputJumlah.value.trim() === "0"
-		&& inputDiskon.value.trim() === "0") {
+		if (inputHarga.value.trim() === ""
+		|| inputJumlah.value.trim() === ""
+		|| inputDiskon.value.trim() === "") {
 			inputHarga.value = inputJumlah.value = inputDiskon.value = inputTotalHarga.value = inputTotalDiskon.value = "";
 			return;
 		}
@@ -95,6 +95,7 @@ function kalkulasiHarga() {
 	
 	let h = inputHarga.value;
 	if (h.trim() === "0") {
+	 inputHarga.value = "";
 	 inputTotalHarga.value = "";
 	  if (inputJumlah.value === "0") {
 	    inputJumlah.value = "";
@@ -112,7 +113,12 @@ function kalkulasiHarga() {
   let v = inputJumlah.value;
   // jika kosong -> jadi 0
   if (v.trim() === "") {
-    inputJumlah.value = "0";
+    //inputJumlah.value = "0";
+    if (h.trim() === "0") {
+      inputHarga.value = "";
+    } else {
+      inputHarga.value = inputHarga.value;
+    }
     inputTotalHarga.value = inputHarga.value;
     if (inputDiskon.value === "0") {
       inputDiskon.value = "";

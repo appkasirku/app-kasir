@@ -1,4 +1,5 @@
 // import fungsi yang dibutuhkan
+import { Install } from './install.js';
 import { Modal } from './modal.js';
 import { Helpers } from './helpers.js';
 import { Sound } from './sound.js';
@@ -186,15 +187,19 @@ function simpanFormProduk(e) {
   const harga = input[3].value.trim();
   if (input[0].value.trim() === "") {
   	input[0].focus();
+  	Install.toast('Masukkan nama/merek produk', input[0]);
   	return;
   } else if (input[1].value.trim() === "") {
   	input[1].focus();
+  	Install.toast('Masukkan ukuran produk', input[1]);
   	return;
   } else if (input[2].value.trim() === "") {
   	input[2].focus();
+  	Install.toast('Masukkan kode produk', input[2]);
   	return;
   } else if (input[3].value.trim() === "") {
   	input[3].focus();
+  	Install.toast('Masukkan harga jual produk', input[3]);
   	return;
   }
   const daftarProduk = JSON.parse(localStorage.getItem("dataProduk")) || [];

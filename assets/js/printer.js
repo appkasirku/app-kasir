@@ -204,6 +204,7 @@ async function reconnectIfRemembered() {
 
 // fungsi cwk koneksi printer
 function cekKoneksiPrinter() {
+  document.querySelector("body")?.classList.add("overhide");
   if (!printerCharacteristic) {
     document.querySelector(".connection").classList.add("show");
     return false;
