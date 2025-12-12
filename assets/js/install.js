@@ -162,7 +162,7 @@ btnInstall?.addEventListener("click", async () => {
 
   // mode buka aplikasi
   if (mode === "open") {
-    window.open("/", "_blank");
+    window.open("/app-kasir/", "_blank");
     return;
   }
 
