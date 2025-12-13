@@ -21,6 +21,8 @@ function initApp() {
   Printer.reconnectIfRemembered();
   // tampilkan data struk
   Struk.tampilkanDataStrukPreviewStruk();
+  // tampilkan info tombol
+  Helpers.tampilkanInfoTombol();
   
   // tampilkan tanggal
   const tanggal = document.querySelector(".tanggal");
@@ -30,6 +32,9 @@ function initApp() {
   
   // event kalkulasi harga form transaksi
   document.querySelectorAll(".box-form input").forEach((input) => {
+    //input.addEventListener("focus", (e) => {
+      Helpers.inputPlaceholder(input);
+    //});
   	input.addEventListener("input", (e) => {
   		Helpers.kalkulasiHarga();
   	});

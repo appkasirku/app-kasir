@@ -18,16 +18,17 @@ function modalInfo(data) {
 				<div>${data.body ?? "(-_-)"}</div>
 			</div>
 			<div class="modal-footer">
-				${data.btn.batal ? `<button data-modal-batal data-rule="${data.btn.batal.rule}" type="button" title="${Helpers.stripHTML(data.btn.batal.text)}">${data.btn.batal.text}</button>` : ""}
-				${data.btn.edit ? `<button data-modal-edit data-rule="${data.btn.edit.rule}" data-target="${data.btn.edit.target}" type="button" title="${Helpers.stripHTML(data.btn.edit.text)}" class="edit">${data.btn.edit.text}</button>` : ""}
-				${data.btn.hapus ? `<button data-modal-hapus data-rule="${data.btn.hapus.rule}" data-target="${data.btn.hapus.target}" type="button" title="${Helpers.stripHTML(data.btn.hapus.text)}" class="hapus">${data.btn.hapus.text}</button>` : ""}
-				${data.btn.oke ? `<button data-modal-oke data-rule="${data.btn.oke.rule}" data-target="${data.btn.oke.target}" type="button" title="${Helpers.stripHTML(data.btn.oke.text)}" class="oke">${data.btn.oke.text}</button>` : ""}
+				${data.btn.batal ? `<button data-title-info="Tutup modal" data-modal-batal data-rule="${data.btn.batal.rule}" type="button" title="${Helpers.stripHTML(data.btn.batal.text)}">${data.btn.batal.text}</button>` : ""}
+				${data.btn.edit ? `<button data-title-info="Edit data" data-modal-edit data-rule="${data.btn.edit.rule}" data-target="${data.btn.edit.target}" type="button" title="${Helpers.stripHTML(data.btn.edit.text)}" class="edit">${data.btn.edit.text}</button>` : ""}
+				${data.btn.hapus ? `<button data-title-info="Hapus data" data-modal-hapus data-rule="${data.btn.hapus.rule}" data-target="${data.btn.hapus.target}" type="button" title="${Helpers.stripHTML(data.btn.hapus.text)}" class="hapus">${data.btn.hapus.text}</button>` : ""}
+				${data.btn.oke ? `<button data-title-info="Lanjutkan ${data.btn.oke.text.toLowerCase()}" data-modal-oke data-rule="${data.btn.oke.rule}" data-target="${data.btn.oke.target}" type="button" title="${Helpers.stripHTML(data.btn.oke.text)}" class="oke">${data.btn.oke.text}</button>` : ""}
 			</div>
 		</div>
 	`;
 	body.appendChild(modalEl);
 	modalEl.innerHTML = modalHtml;
 	body.classList.add("overhide");
+	Helpers.tampilkanInfoTombol();
 }
 
 // fungsi aksi modal info

@@ -80,18 +80,19 @@ function liveSearchProduk(el) {
 	  hideButtonInputNamaProduk();
   	listProduk.innerHTML = hasil.map(p => `
   		<li${rounded}>
-  			<span data-target-jumlah="1" data-target-kode="${p.kodeProduk}" data-target-rule="" class="nama-produk">
+  			<span data-title-info="Klik nama produk untuk masukkan diskon" data-target-jumlah="1" data-target-kode="${p.kodeProduk}" data-target-rule="" class="nama-produk">
   				${p.namaProduk} ${p.beratProduk}
   			</span>
   			<span>
-  			  <input inputmode="numeric" value="1" class="jumpro">
+  			  <input data-title-info="Edit jumlah" inputmode="numeric" value="1" class="jumpro">
   			</span>
-  			<span data-target-jumlah="1" data-target-kode="${p.kodeProduk}" data-target-rule="addpro" class="btn-plus">
+  			<span data-title-info="Tambah ke keranjang" data-target-jumlah="1" data-target-kode="${p.kodeProduk}" data-target-rule="addpro" class="btn-plus">
   				<i class="fa-solid fa-check"></i>
   			</span>
   		</li>
   	`).join("");
   	validasiJumlahKosong();
+  	Helpers.tampilkanInfoTombol();
 	} else {
 		tutupHasilPencarian();
 	}
@@ -317,7 +318,7 @@ function tampilkanKeranjang() {
   				<td>=</td>
   				<td>${Helpers.formatRupiah(p.subtotal)}</td>
   				<td>
-  					<button data-pilihan-edit-hapus-keranjang="${i}" data-nama-barang-keranjang="${p.namaBarang}" type="button" title="Pilihan">
+  					<button data-title-info="Edit atau hapus keranjang" data-pilihan-edit-hapus-keranjang="${i}" data-nama-barang-keranjang="${p.namaBarang}" type="button" title="Pilihan">
   						<i class="fa-solid fa-ellipsis-vertical"></i>
   					</button>
   				</td>

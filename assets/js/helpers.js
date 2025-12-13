@@ -1,3 +1,4 @@
+import { Install } from './install.js';
 import { Transaksi } from './transaction.js';
 
 // fungsi tanggal sekarang
@@ -69,6 +70,15 @@ function formatRupiah(value) {
   	minimumFractionDigits: 0,
   	maximumFractionDigits: 0
   });
+}
+
+// fungsi input placeholder
+function inputPlaceholder(el) {
+  el.addEventListener("focus", () => {
+  if (el.id === "namaBarang") return el.placeholder = "Kode / nama produk";
+  el.placeholder = "0";
+  });
+  el.addEventListener("blur", () => el.placeholder = "");
 }
 
 // fungsi kalkulasi harga
@@ -175,6 +185,49 @@ function firstRelodingDataApp() {
   }
 }
 
+// fungsi tampilkan info tombol
+function tampilkanInfoTombol() {
+  const buttons = document.querySelectorAll("[data-title-info]");
+  if (!buttons.length) return;
+  let isTooltipActive = false;
+  let pressTimer;
+  buttons.forEach(button => {
+    button.addEventListener("touchstart", () => {
+      pressTimer = setTimeout(() => {
+        const info = button.dataset.titleInfo;
+        Install.toast(info, button);
+        isTooltipActive = true;
+        // nonaktifkan tombol lain
+        buttons.forEach(btn => {
+          if (btn !== button) {
+            btn.style.pointerEvents = "none";
+            btn.style.filter = "blur(1px)";
+          }
+        });
+        // auto restore
+        setTimeout(() => {
+          restoreButtons();
+        }, 2500);
+      }, 400);
+    });
+    button.addEventListener("touchend", () => {
+      clearTimeout(pressTimer);
+    });
+    button.addEventListener("touchmove", () => {
+      clearTimeout(pressTimer);
+    });
+  });
+  // fungsi restore buttons
+  function restoreButtons() {
+    if (!isTooltipActive) return;
+    isTooltipActive = false;
+    buttons.forEach(btn => {
+      btn.style.pointerEvents = "";
+      btn.style.filter = "";
+    });
+  }
+}
+
 export const Helpers = {
 	tanggalSekarang,
 	capitalizeWords,
@@ -186,6 +239,8 @@ export const Helpers = {
 	formatRupiah,
 	inputFormatHarga,
 	kalkulasiHarga,
+	inputPlaceholder,
 	stripHTML,
-	firstRelodingDataApp
+	firstRelodingDataApp,
+	tampilkanInfoTombol
 };

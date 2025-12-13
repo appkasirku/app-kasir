@@ -24,6 +24,8 @@ function isAppInstalled() {
 // fungsi toas notifikasi
 function toast(text, anchorEl = null) {
   let el = document.querySelector("#toast");
+  // tahan jika elemen masih ada
+  if (el) return;
   // buat elemen jika belum ada
   if (!el) {
     el = document.createElement("div");
@@ -41,13 +43,13 @@ function toast(text, anchorEl = null) {
   el.style.display = "block";
   // style utama
   el.style.position = "fixed";
-  el.style.zIndex = "9999";
-  el.style.padding = "10px 14px";
+  el.style.zIndex = "999999";
+  el.style.padding = "8px 10px";
   el.style.borderRadius = "8px";
-  el.style.fontSize = "14px";
+  el.style.fontSize = "12px";
   el.style.background = "#111";
   el.style.color = "#fff";
-  el.style.border = "1px solid #ffffff15";
+  el.style.border = "1px solid #ffffff35";
   el.style.boxShadow = "0 6px 16px rgba(0,0,0,0.3)";
   el.style.maxWidth = "230px";
   el.style.opacity = "0";
@@ -63,8 +65,8 @@ function toast(text, anchorEl = null) {
   if (anchorEl) {
     const rect = anchorEl.getBoundingClientRect();
     // render dulu agar ukuran valid
-    el.style.left = "0px";
     el.style.top = "0px";
+    el.style.left = "0px";
     const toastRect = el.getBoundingClientRect();
     const toastWidth = toastRect.width;
     const centerX = rect.left + rect.width / 2;
@@ -103,7 +105,7 @@ function toast(text, anchorEl = null) {
     let arrowLeft = centerX - left - 8;
     // clamp panah agar tidak pernah keluar toast
     const minArrow = 10;
-    const maxArrow = toastWidth - 20;
+    const maxArrow = toastWidth - 22;
     if (arrowLeft < minArrow) arrowLeft = minArrow;
     if (arrowLeft > maxArrow) arrowLeft = maxArrow;
     arrowEl.style.left = `${arrowLeft}px`;
@@ -124,8 +126,9 @@ function toast(text, anchorEl = null) {
   el._timer = setTimeout(() => {
     el.style.opacity = "0";
     setTimeout(() => {
+      el.remove();
       el.style.display = "none";
-    }, 100);
+    }, 200);
   }, 2500);
 }
 
@@ -135,14 +138,12 @@ function updateInstallButton() {
 
   // jika dibuka sebagai PWA -> sembunyikan tombol
   if (isAppInstalled()) {
-    //btnInstall.style.display = "none";
     btnInstall.classList.remove("show");
     return;
   }
 
   // jika sudah install -> jadi tombol buka
   if (localStorage.getItem("appKasirInstalled") === "yes") {
-    //btnInstall.style.display = "flex";
     btnInstall.classList.add("show");
     btnInstall.textContent = "Buka Aplikasi";
     btnInstall.dataset.mode = "open";
@@ -150,7 +151,6 @@ function updateInstallButton() {
   }
 
   // jika belum install -> jadi tombol install
-  //btnInstall.style.display = "flex";
   btnInstall.classList.add("show");
   btnInstall.textContent = "Install Aplikasi";
   btnInstall.dataset.mode = "install";
@@ -169,7 +169,7 @@ btnInstall?.addEventListener("click", async () => {
   // mode install aplikasi
   if (mode === "install") {
     if (!deferredPrompt) {
-      toast("❌ Install belum tersedia");
+      toast("❌ Install belum tersedia di perangkat Anda");
       return;
     }
     

@@ -151,7 +151,7 @@ function tampilkanDaftarProduk() {
   						<span class="ktp">${p.namaProduk} ${p.beratProduk} &gt; Rp ${p.hargaProduk}</span>
   					</div>
   					<div class="btn-action">
-  						<button data-pilihan-edit-hapus-produk="${p.kodeProduk}" type="button" title="Hapus">
+  						<button data-title-info="Edit atau hapus produk" data-pilihan-edit-hapus-produk="${p.kodeProduk}" type="button" title="Hapus">
   							<i class="fa-solid fa-ellipsis-vertical"></i>
   						</button>
   					</div>
@@ -159,6 +159,7 @@ function tampilkanDaftarProduk() {
   			</li>
 			`;
 		});
+		Helpers.tampilkanInfoTombol();
 	} else {
 		tampilkanDaftarProduk.innerHTML = `
 		<li class="ctr">Belum ada produk yang tersedia!</li>
