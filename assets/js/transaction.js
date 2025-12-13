@@ -126,7 +126,6 @@ function showButtonInputNamaProduk() {
 // klik tombol input nama produk
 function clickButtonInputNamaProduk() {
   const inputs = document.querySelectorAll(".box-form input");
-  //const namaBarang = document.querySelector(".box-form #namaBarang");
   inputs?.forEach((e) => {
     e.value = "";
   });
@@ -145,8 +144,11 @@ function hideButtonInputNamaProduk() {
 async function printStrukBelanja() {
   try {
   	const bayar = document.querySelector("#nominalBayar");
+    Sound.playProcess();
   	if (!bayar?.value.trim()) {
   		bayar.focus();
+  		Install.toast('Masukkan nominal pembayaran', bayar);
+  		setTimeout(() => Sound.stopProcess(), 1250);
   		return false;
   	}
     
@@ -195,8 +197,10 @@ async function printStrukBelanja() {
   	  btn: { batal: { text: 'Tutup' } }
   	});
   	resetKeranjangBelanja();
+  	setTimeout(() => Sound.stopProcess(), 250);
   	return true;
   } catch(err) {
+    Sound.stopProcess();
     Modal.modalInfo({
       title: 'Gagal Diproses',
       body: `Gagal cetak struk: ${err}`,
@@ -494,7 +498,7 @@ function modalPembayaran() {
 			<form id="formPembayaran" autocomplete="off">
 				<div class="row">
 					<label>Nominal Bayar</label>
-					<input id="nominalBayar" inputmode="numeric">
+					<input id="nominalBayar" inputmode="numeric" placeholder="0">
 				</div>
 				<div class="row">
 					<label>Total Belanja</label>
@@ -514,7 +518,8 @@ function modalPembayaran() {
 			}
 		}
 	});
-	setTimeout(() => {document.querySelector(".modal-info")?.classList.add("info-form")},0);
+	Helpers.tampilkanInfoTombol();
+	setTimeout(() => { document.querySelector(".modal-info")?.classList.add("info-form") }, 0);
 	// hubungkan tombol dengan form modal
 	const btnPrint = document.querySelector("[data-modal-oke]");
 	if (btnPrint) {

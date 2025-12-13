@@ -1,3 +1,5 @@
+import { Sound } from './sound.js';
+
 let deferredPrompt = null;
 
 const loader = document.querySelector("#installLoader");
@@ -179,6 +181,7 @@ btnInstall?.addEventListener("click", async () => {
     if (result.outcome === "accepted") {
       showInstallLoader();
       deferredPrompt = "next";
+      Sound.playProcess();
     } else {
       toast("❌ Install dibatalkan");
     }
@@ -203,6 +206,7 @@ window.addEventListener("appinstalled", () => {
     hideInstallLoader();
     toast("✅ Aplikasi berhasil diinstall");
     updateInstallButton();
+    Sound.stopProcess();
   }
 });
 
