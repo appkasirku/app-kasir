@@ -92,7 +92,7 @@
 					</div>
 					
 					<div class="btn-print" style="margin:20px 0 10px">
-						<button id="tutup" class="tutup" type="button" title="Tutup">
+						<button data-title-info="Tutup struk transaksi" id="tutup" class="tutup" type="button" title="Tutup">
 							<i class="fa-solid fa-times"></i>
 						</button>
 					</div>
@@ -147,30 +147,30 @@
 							<input id="totalDiskon" inputmode="numeric" placeholder="0" readonly>
 						</div>
 						<div class="flex-action">
-							<button id="btnScan" type="button" title="Scan" class="btnscan">
+							<button data-title-info="Scan produk" id="btnScan" type="button" title="Scan" class="btnscan">
 								<i class="fa-solid fa-barcode"></i>
 							</button>
-							<button id="inputTransaksi" type="submit" title="Tambah">
+							<button data-title-info="Simpan ke keranjang" id="inputTransaksi" type="submit" title="Tambah">
   							<i class="fa-solid fa-file-circle-plus"></i>
 							</button>
 						</div>
 					</div>
 					<div class="btn-per-pro">
-						<button id="perbesar" class="perbesar" type="button" title="Lihat Struk">
+						<button data-title-info="Lihat struk transaksi" id="perbesar" class="perbesar" type="button" title="Lihat Struk">
 							<i class="fa-solid fa-receipt"></i> Lihat
 						</button>
-            <button id="bukaFormProduk" type="button" title="Tambah Produk" class="tambah-produk">
+            <button data-title-info="Buka form produk" id="bukaFormProduk" type="button" title="Tambah Produk" class="tambah-produk">
               <i class="fa-solid fa-plus-circle"></i>
             </button>
-						<button id="bukaPengaturan" type="button" title="Pengaturan Struk">
+						<button data-title-info="Buka pengaturan struk" id="bukaPengaturan" type="button" title="Pengaturan Struk">
 							Struk <i class="fa-solid fa-gear"></i>
 						</button>
 					</div>
 					<div class="btn-per-pro mt">
-					  <button id="kosongkan" type="button" title="Kosongkan">
+					  <button data-title-info="Hapus data transaksi" id="kosongkan" type="button" title="Kosongkan">
 					    <i class="fa-solid fa-trash-can"></i> Struk
 					  </button>
-						<button id="prosesPrint" type="button" title="Bayar">
+						<button data-title-info="Proses pembayaran" id="prosesPrint" type="button" title="Bayar">
 							Bayar <i class="fa-solid fa-hand-holding-dollar"></i>
 						</button>
 					</div>
@@ -209,13 +209,13 @@
 						<input type="text" placeholder="Terima Kasih, Sudah Berbelanja">
 					</div>
 					<div class="row tc">
-						<button id="tutupPengaturan" type="button" title="Tutup">
+						<button data-title-info="Tutup pengaturan struk" id="tutupPengaturan" type="button" title="Tutup">
 							<i class="fa-solid fa-times-circle"></i> Tutup
 						</button>
-						<button id="resetPengaturan" type="reset" title="Reset">
+						<button data-title-info="Reset form pengaturan struk" id="resetPengaturan" type="reset" title="Reset">
 						  <i class="fa-solid fa-refresh"></i> Reset
 						</button>
-						<button id="simpanDataStruk" type="submit" title="Simpan">
+						<button data-title-info="Simpan data struk" id="simpanDataStruk" type="submit" title="Simpan">
 							<i class="fa-solid fa-save"></i> Simpan
 						</button>
 					</div>
@@ -244,18 +244,18 @@
 							<label>Harga Jual (max 10)</label>
 							<input id="inputFormHarga" inputmode="numeric" placeholder="contoh: 75.000">
 						</div>
-						<button id="btnScanIpro" class="btnscan" type="button" title="Scan" style="margin-top:24px">
+						<button data-title-info="Scan produk" id="btnScanIpro" class="btnscan" type="button" title="Scan" style="margin-top:24px">
 							<i class="fa-solid fa-barcode"></i>
 						</button>
 					</div>
 					<div class="row tc">
-						<button id="tutupFormProduk" type="button" title="Tutup">
+						<button data-title-info="Tutup form produk" id="tutupFormProduk" type="button" title="Tutup">
 						  <i class="fa-solid fa-times-circle"></i> Tutup
 						</button>
-						<button id="resetFormProduk" type="reset" title="Reset">
+						<button data-title-info="Reset form produk" id="resetFormProduk" type="reset" title="Reset">
 						  <i class="fa-solid fa-refresh"></i> Reset
 						</button>
-						<button id="simpanFormProduk" type="submit" title="Simpan">
+						<button data-title-info="Simpan data produk" id="simpanFormProduk" type="submit" title="Simpan">
 						  <i class="fa-solid fa-save"></i> Simpan
 						</button>
 					</div>
@@ -273,28 +273,28 @@
 			<div class="scan-line"></div>
 			<div id="focusDot" class="autofocus-dot"></div>
 			<div id="flashCtrl" class="flash-btn">
-			  <button id="btnFlash" type="button">
+			  <button data-title-info="On/off flash kamera" id="btnFlash" type="button">
 			    <i class="fa-solid fa-bolt"></i>
 			  </button>
 			</div>
 			<div id="scanFile" class="scan-file">
 				<input id="inputFile" type="file" accept="image/*" style="display:none">
-				<button id="btnScanFile" type="button" title="Scan File">
+				<button data-title-info="Scan file di penyimpanan" id="btnScanFile" type="button" title="Scan File">
 					<i class="fa-solid fa-image"></i>
 				</button>
 			</div>
-			<button id="closeScanner" class="close-btn">Tutup</button>
+			<button data-title-info="Tutup scan" id="closeScanner" class="close-btn">Tutup</button>
 		</div>
 	</div>
 	
 	<div class="connection">
 		<div class="con-box">
-			<button data-tutup-modal-koneksi type="button" title="Tutup" class="close">
+			<button data-title-info="Tutup koneksi bluetooth" data-tutup-modal-koneksi type="button" title="Tutup" class="close">
 				<i class="fa-solid fa-times"></i>
 			</button>
 			<h1>App Kasir</h1>
 			<h2>Printer Thermal Bluetooth</h2>
-			<button data-scan-bluetooth type="button">
+			<button data-title-info="Sambungkan aplikasi ke mesin printer via bluetooth" data-scan-bluetooth type="button">
 			  <i class="fa-solid fa-search"></i> Cari &amp; Hubungkan
 			 </button>
 			<div id="status" class="status">Status: belum terhubung</div>
@@ -303,7 +303,7 @@
 	</div>
 	
 	<div class="app-install">
-	  <button id="btnInstallApp" data-mode="install">
+	  <button data-title-info="Install aplikasi" id="btnInstallApp" data-mode="install">
       Install Aplikasi
     </button>
 	</div>
